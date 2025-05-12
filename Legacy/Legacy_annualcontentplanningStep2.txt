@@ -1,0 +1,82 @@
+YardBonita Annual Content Planning – Step 2: Outline Generation Prompt
+
+🎯 GOAL:
+This prompt is used to generate structured outlines for each article in 2025planning.xlsx, before full article writing begins. Each outline must follow the rules of the YardBonita system and be guided by the article's Tier, city, and category.
+
+📋 INPUT FIELDS (from spreadsheet):
+
+🛑 DO NOT attempt to read or parse the `2025planning.xlsx` file directly. 
+The spreadsheet will be accessed only via the `generate_outlines.py` script, which will return rows of metadata. 
+You will receive input in the form of uuid, post_title, city, category, and tier. 
+Only generate outlines based on these inputs. Do not attempt to open or inspect the spreadsheet.
+
+- post_title
+- city
+- category
+- tier
+
+📐 OUTLINE STRUCTURE:
+Each outline should reflect the appropriate Tier:
+
+Tier 1 (Cornerstone Content):
+- Length: 1400+ words (full guide)
+- Structure: Intro, 4–6 detailed sections, each with supporting bullets
+- Must include FAQ section with 3–5 unique questions
+- Should note related articles if known
+- Ends with an author callout
+
+Tier 2 (Seasonal Workhorse):
+- Length: 1100–1300 words
+- Structure: Intro, 3–4 strong sections with informative depth
+- FAQ optional (include if natural)
+- Mention seasonal framing if applicable
+
+Tier 3 (Utility Booster):
+- Length: 900–1100 words
+- Structure: Intro + 2–3 focused sections, light practical framing
+- Should be quick to read and highly searchable
+- No FAQ unless truly warranted
+
+💡 GUIDANCE:
+- Outlines must be deeply thoughtful and avoid repetition
+- Each section should serve a distinct purpose
+- Avoid fluff — focus on usefulness and clarity
+- If the title doesn’t make sense, note it but still provide your best effort
+- City and category should affect the specificity of the outline
+
+✍️ OUTPUT FORMAT:
+Return in this structure:
+---
+Title: <post_title>
+City: <city>
+Category: <category>
+Tier: <tier>
+
+Outline:
+1. <Section Heading>
+   - <bullet>
+   - <bullet>
+2. <Section Heading>
+   - <bullet>
+   - <bullet>
+...
+
+FAQ (optional):
+- <Question 1>
+- <Question 2>
+---
+
+Do NOT write the article. Only output the outline.
+
+✅ UUID Handling Rules:
+- Each outline returned must correspond to the correct uuid provided in the row.
+- Never overwrite rows without matching the uuid.
+- Do not regenerate outlines for rows that already contain a value unless explicitly requested.
+
+•After generating an outline, return a terminal-friendly command for the user to update the row in 2025planning.xlsx.
+•Format:
+
+🟩 Run this command to update the spreadsheet:
+python3 /Users/justinlaw/Desktop/Yardbonita/file\ for\ ai/insertoutlines.py "<uuid>" "<outline>"
+
+•Always provide this command after the outline block. The outline text must be escaped properly for command-line safety.

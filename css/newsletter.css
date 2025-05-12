@@ -1,0 +1,93 @@
+/* === Newsletter Card Styles (Fixed and Clean) === */
+
+/* Dark green card background */
+.newsletter-card {
+  background-color: #3d613f !important;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: #ffffff !important;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+/* Headline inside the card */
+.newsletter-card h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #ffffff !important;
+}
+
+/* Paragraph inside the card */
+.newsletter-card p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  color: #ffffff !important;
+}
+
+/* Form layout (horizontal on desktop) */
+.newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Form fields (input + select) */
+.newsletter-form input[type="email"],
+.newsletter-form select {
+  padding: 0.75rem;
+  height: 50px; /* Force same height */
+  width: 100%;
+  max-width: 300px;
+  background: #ffffff;
+  color: #2c2c2c;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+
+/* Submit button */
+.newsletter-form button {
+  background-color: #ff8c00 !important;
+  color: #2c2c2c !important;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for button */
+.newsletter-form button:hover {
+  background-color: #e07b00 !important;
+  color: #ffffff !important;
+}
+
+/* === Mobile Responsive Styles === */
+@media (max-width: 640px) {
+  .newsletter-form {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .newsletter-form input,
+  .newsletter-form select,
+  .newsletter-form button {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .newsletter-card {
+    padding: 1.2rem; /* Tighten padding for smaller screens */
+  }
+}

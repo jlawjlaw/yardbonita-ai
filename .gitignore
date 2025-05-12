@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# VSCode settings
+.vscode/
+
+# Jupyter checkpoints (if used)
+.ipynb_checkpoints/
+
+# Mac system files
+.DS_Store
+
+# Log files and caches
+*.log
+*.cache
+
+# OS generated files
+Thumbs.db
+
+# Excel or data files
+*.xlsx
+*.csv
+
+# Image outputs
+*.jpg
+*.png
+*.gif
+
+# Ignore Python environment settings
+pip-log.txt
+*.egg
+*.egg-info/
+dist/
+build/
+
+# GPT or retry artifacts
+*.tmp
+*.bak
+.raw_gpt_output
+
+myenv/

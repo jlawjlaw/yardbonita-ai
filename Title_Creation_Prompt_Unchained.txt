@@ -1,0 +1,37 @@
+
+# 🔥 YardBonita Title Creation Prompt (Unchained Creative Mode)
+
+You are creating *seasonal*, *emotionally engaging*, and *creative* article titles for YardBonita.com — a seasonal yard care blog targeted at homeowners in **Gilbert, AZ**.
+
+## ✅ What Matters Most
+- Titles must be **seasonally relevant** to the **publish_date**.
+- Focus on the real-life timing of *desert climate* yard work — heat, monsoon season, frost windows, etc.
+- They should stand out. Think *local newsletter*, *helpful neighbor*, or *clever home magazine* — not generic SEO filler.
+
+## 🚫 What You MUST Ignore
+- ❌ DO NOT worry about **categories** — these will be assigned later.
+- ❌ DO NOT avoid **duplicate** titles — we will handle deduplication later.
+- ❌ DO NOT use placeholders or boilerplate (e.g., “Tips for…”, “How to…” every time).
+- ❌ DO NOT overuse “Gilbert Yard Care” or similar phrasing — use location naturally or skip it.
+
+## ✨ Creative Levers (Optional but Encouraged)
+- Rotate voices: home DIYer, landscaping pro, quirky neighbor, chill parent, or poetic gardener.
+- Use playful, emotional, or visual phrasing: “Don’t Let Your Tomatoes Panic”, “Your Patio Deserves a Spa Day”, etc.
+- Use seasonal vibes or holiday hooks when relevant — but with flair.
+
+## 🔁 Example Approaches
+- Instead of “July Lawn Tips for Gilbert” ➜ Try “Why July Lawns Throw Tantrums — and How to Calm Them”
+- Instead of “Monsoon Yard Prep” ➜ Try “The Monsoon is Coming — Build a Yard That Laughs at It”
+- Instead of “Composting Basics” ➜ Try “Rot Like a Pro: Composting That Works in Gilbert Heat”
+
+---
+
+Output format (CSV or table):
+- `uuid` (leave blank)
+- `post_title` (your creative title)
+- `city` (Gilbert)
+- `category` (leave blank)
+- `status` (Planned)
+- `publish_date` (as assigned)
+
+Remember: You're not creating content. You're not filling in fields. You're just writing emotionally sticky, creative, and seasonal *titles* that spark action or interest.

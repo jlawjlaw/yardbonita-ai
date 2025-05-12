@@ -1,0 +1,457 @@
+
+
+/* === NEWSLETTER WIDGET === */
+/* === Newsletter Card Styles (Fixed and Clean) === */
+
+/* Dark green card background */
+.homepage-newsletter .newsletter-card {
+  background-color: #3d613f !important;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  color: #ffffff !important;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+/* Headline inside the card */
+.homepage-newsletter .newsletter-card h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #ffffff !important;
+}
+
+/* Paragraph inside the card */
+.homepage-newsletter .newsletter-card p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  color: #ffffff !important;
+}
+
+/* Form layout (horizontal on desktop) */
+.homepage-newsletter .newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Form fields (input + select) */
+.newsletter-form input[type="email"],
+.homepage-newsletter .newsletter-form select {
+  padding: 0.75rem;
+  height: 50px; /* Force same height */
+  width: 100%;
+  max-width: 300px;
+  background: #ffffff;
+  color: #2c2c2c;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+
+/* Submit button */
+.homepage-newsletter .newsletter-form button {
+  background-color: #ff8c00 !important;
+  color: #2c2c2c !important;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for button */
+.homepage-newsletter .newsletter-form button:hover {
+  background-color: #e07b00 !important;
+  color: #ffffff !important;
+}
+
+/* === Mobile Responsive Styles === */
+@media (max-width: 640px) {
+.homepage-newsletter .newsletter-form {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .newsletter-form input,
+  .newsletter-form select,
+.homepage-newsletter .newsletter-form button {
+    width: 100%;
+    max-width: 320px;
+  }
+
+.homepage-newsletter .newsletter-card {
+    padding: 1.2rem; /* Tighten padding for smaller screens */
+  }
+}
+
+/* === LATESTARTICLES WIDGET === */
+
+
+
+/* === LATEST ARTICLES WRAPPER (preserve existing borders) === */
+.homepage-latest-articles .latest-articles-wrapper {
+  background-color: #d8f0d1;
+  border: 3px solid #d8f0d1;
+  border-radius: 20px;
+  max-width: 1280px;
+  margin: 0 auto 2rem auto;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.homepage-latest-articles .latest-articles-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 5px;
+}
+
+.homepage-latest-articles .latest-articles-shell {
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* === CARD STRUCTURE === */
+.homepage-latest-articles .latest-posts-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.homepage-latest-articles .latest-post-card {
+  background-color: #3d613f;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-bottom: 5px;
+  padding: 16px; /* Instead of margin on card-inner */
+  position: relative;
+}
+
+.homepage-latest-articles .latest-post-card:hover {
+  background-color: #2a402a;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.homepage-latest-articles .latest-post-card a {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.homepage-latest-articles .card-link {
+  background: transparent !important;
+  display: block;
+}
+
+/* Make the inner card slightly smaller to reveal the outer card on hover */
+
+.homepage-latest-articles .card-inner {
+  background-color: #d8f0d1;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  margin: 0; /* ← important */
+}
+
+
+/* === Thumbnail Left (fixed size) === */
+.homepage-latest-articles .thumbnail {
+  flex: 0 0 100px;
+  max-width: 100px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage-latest-articles .thumbnail img {
+  width: 100%;
+  height: auto;
+  max-width: 100px;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+}
+
+/* === CONTENT ON RIGHT === */
+.homepage-latest-articles .card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.homepage-latest-articles .card-content h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2c2c2c;
+  font-weight: bold;
+}
+
+.homepage-latest-articles .card-content p {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  color: #2c2c2c;
+}
+
+/* === RESPONSIVE: PRESERVE LAYOUT === */
+@media (max-width: 768px) {
+.homepage-latest-articles .card-inner {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+
+.homepage-latest-articles .thumbnail {
+    flex: 0 0 100px;
+  }
+
+.homepage-latest-articles .card-content h3 {
+    font-size: 1.1rem;
+  }
+
+.homepage-latest-articles .card-content p {
+    font-size: 0.95rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+.homepage-latest-articles .card-inner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+.homepage-latest-articles .thumbnail {
+    flex: 0 0 auto;
+    width: 80px;
+    height: auto;
+    max-width: 80px;
+    max-height: 80px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+.homepage-latest-articles .thumbnail img {
+    width: 100%;
+    height: auto;
+    max-height: 80px;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px;
+  }
+
+.homepage-latest-articles .card-content h3 {
+    font-size: 1rem;
+  }
+
+.homepage-latest-articles .card-content p {
+    font-size: 0.9rem;
+  }
+}
+
+/* === CITYCARDS WIDGET === */
+/* CITY CARDS STYLING */
+
+/* Wrapper and Shell */
+.homepage-city-cards .city-hub-wrapper {
+  background-color: #d8f0d1;
+  border: 2px solid #d8f0d1;
+  border-radius: 20px;
+  padding: 2px;
+  max-width: 1280px;
+  margin: 0 auto 2rem auto;
+  box-sizing: border-box;
+}
+
+.homepage-city-cards .city-hub-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.homepage-city-cards .city-hub-section {
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+/* City Card */
+.homepage-city-cards .city-card {
+  background-color: #3d613f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homepage-city-cards .city-card:hover {
+  background-color: #2a402a;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* City Card Image */
+.homepage-city-cards .city-card img {
+  width: 100%;
+  max-width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+/* City Card Heading */
+.homepage-city-cards .city-card h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
+/* City Card Description */
+.homepage-city-cards .city-card p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+/* City Card Links List */
+.homepage-city-cards .city-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.homepage-city-cards .city-card ul li {
+  margin-bottom: 0.5rem;
+}
+
+.homepage-city-cards .city-card ul li a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.homepage-city-cards .city-card ul li a:hover {
+  color: #d8f0d1;
+}
+
+/* View All Posts Button */
+.homepage-city-cards .city-card .button {
+  background-color: #ffa500; /* Orange button */
+  color: #2c2c2c;
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  margin-top: auto;
+}
+
+.homepage-city-cards .city-card .button:hover {
+  background-color: #e59400;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+.homepage-city-cards .city-hub-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === HOMEHERO WIDGET === */
+
+/* ===================================================
+   HERO IMAGE STYLING
+=================================================== */
+.homepage-hero .hero-carousel {
+    margin: 0;
+    padding: 0;
+    background: none;
+}
+
+.homepage-hero .hero-carousel .swiper-slide {
+    position: relative;
+    background: url('/wp-content/uploads/2025/04/hero.jpg') center/cover no-repeat;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.homepage-hero .hero-carousel .swiper-slide > div {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.homepage-hero .hero-carousel h2 {
+    font-size: 2.2rem;
+}
+
+.homepage-hero .hero-carousel p {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+}
+
+.homepage-hero .hero-carousel .button {
+    background: #3d613f;
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+.homepage-hero .hero-carousel h2 {
+        font-size: 1.8rem;
+    }
+.homepage-hero .hero-carousel p {
+        font-size: 1rem;
+    }
+}
+
+/* Remove margin between header and hero image */
+.homepage-hero .site-header {
+  margin-bottom: 0 !important;
+}
+
+.homepage-hero .hero-carousel {
+  margin-top: 0 !important;
+}

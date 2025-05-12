@@ -1,0 +1,347 @@
+/* ===============================
+   City Page Outer Ring & Wrapper
+   =============================== */
+.citypage-shell h1,
+.citypage-shell h2,
+.citypage-shell h3,
+.citypage-shell p,
+.citypage-shell li,
+.citypage-shell a {
+  color: #2c2c2c;
+}
+
+.city-section-header {
+  margin-top: 2.1rem;
+  margin-bottom: 0.6rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: #305432;
+}
+
+.newsletter-cta {
+  background: #eaf3e5;
+  border-radius: 10px;
+  padding: 1.5rem 1.3rem;
+  margin-top: 2.6rem;
+  color: #2c2c2c;
+  box-shadow: 0 2px 16px #c6e5bc34;
+}
+
+
+.newsletter-cta h3 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  color: #305432;
+}
+
+.city-latest-articles {
+  margin-top: 1.8rem;
+  padding-left: 0;
+  list-style: none;
+}
+
+.city-latest-articles li {
+  margin-bottom: 1.2rem;
+  font-size: 1.08rem;
+  line-height: 1.44;
+}
+
+.article-date {
+  font-size: 0.93rem;
+  color: #6e866b;
+  margin-left: 0.5rem;
+}
+
+a {
+  color: #2c2c2c;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #305432;
+}
+
+/* Featured Image / Cover Block */
+.page-id-33 .wp-block-cover, .page-id-42 .wp-block-cover,
+.page-id-36 .wp-block-cover, .page-id-39 .wp-block-cover,
+.page-id-123 .wp-block-cover, .page-id-124 .wp-block-cover {
+  max-width: 1280px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  border-radius: 0 !important;
+  overflow: hidden;
+}
+
+/* Remove extra top/bottom margin for city pages */
+.page-id-33 .inside-article,
+.page-id-33 .entry-content,
+.page-id-42 .inside-article,
+.page-id-42 .entry-content {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* TOC Navigation */
+nav.city-toc ul.toc-list {
+  display: block !important;
+  flex-wrap: nowrap !important;
+  padding-left: 1.25rem !important;
+}
+
+nav.city-toc ul.toc-list li {
+  display: list-item !important;
+  margin: 0.5rem 0 !important;
+}
+
+nav.city-toc ul.toc-list li a {
+  text-decoration: underline !important;
+  font-weight: 500 !important;
+  color: #3d613f !important;
+}
+
+nav.city-toc ul.toc-list li a:hover {
+  color: #2a402a !important;
+  text-decoration: none !important;
+}
+
+/* ===============================
+   Main City Page Shell Layout
+   =============================== */
+.citypage-outer-wrapper {
+  background-color: #d8f0d1;
+  border: 3px solid #d8f0d1;
+  border-radius: 18px;
+  max-width: 1200px;
+  margin: 2rem auto;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 2 !important;
+  padding-bottom: 2 !important;
+  box-sizing: border-box;
+}
+
+.citypage-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+.citypage-shell {
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 1.0rem 1.0rem !important;
+  box-sizing: border-box;
+  color: #2c2c2c;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  display: block !important;
+}
+
+@media (max-width: 700px) {
+  .citypage-shell {
+    padding: 1rem 1rem !important;
+  }
+}
+
+/* ===============================
+   Post List Styling
+   =============================== */
+.citypage-postlist-wrapper {
+  background-color: #2f2f2f;
+  border: 2px solid #2f2f2f;
+  border-radius: 18px;
+  padding: 2px;
+  box-sizing: border-box;
+  margin: 2rem 0;
+  max-width: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.citypage-postlist-inner {
+  background-color: #d8f0d1;
+  border-radius: 14px;
+  padding: 6px;
+  box-sizing: border-box;
+  max-width: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.citypage-postlist-container {
+  background-color: #315838;
+  border-radius: 12px;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.citypage-postlist-card {
+  background-color: #d8f0d1;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  padding: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.citypage-postlist-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.citypage-thumbnail {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.citypage-postlist-card-content h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.citypage-postlist-card-content p {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+  color: #2f2f2f;
+}
+
+.citypage-postlist-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.read-more-text {
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-left: 6px;
+}
+
+/* Gilbert Articles Section (Styled to match YardBonita aesthetic) */
+.gilbert-articles-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 3px solid #d8f0d1;
+  background-color: #f7fdf5;
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.gilbert-articles-section h2.city-section-header {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2f2f2f;
+}
+
+.gilbert-articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.gilbert-post {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  padding: 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.gilbert-post:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.gilbert-post .thumbnail img {
+  max-width: 160px;
+  border-radius: 10px;
+  object-fit: cover;
+  aspect-ratio: 4/3;
+}
+
+.gilbert-post .content h3 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  color: #007c55;
+}
+
+.gilbert-post .content h3 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.gilbert-post .content p {
+  margin: 0.3rem 0 0.5rem 0;
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.gilbert-post .content small {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.gilbert-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.gilbert-pagination .page-numbers {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.gilbert-pagination .page-numbers.current {
+  background-color: #007c55;
+  color: #fff;
+  border-color: #007c55;
+}
+
+body.home .site-main {
+  margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+
+.inside-article {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}

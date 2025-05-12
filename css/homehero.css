@@ -1,0 +1,62 @@
+
+/* ===================================================
+   HERO IMAGE STYLING
+=================================================== */
+.hero-carousel {
+    margin: 0;
+    padding: 0;
+    background: none;
+}
+
+.hero-carousel .swiper-slide {
+    position: relative;
+    background: url('/wp-content/uploads/2025/04/hero.jpg') center/cover no-repeat;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.hero-carousel .swiper-slide > div {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.hero-carousel h2 {
+    font-size: 2.2rem;
+}
+
+.hero-carousel p {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+}
+
+.hero-carousel .button {
+    background: #3d613f;
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .hero-carousel h2 {
+        font-size: 1.8rem;
+    }
+    .hero-carousel p {
+        font-size: 1rem;
+    }
+}
+
+/* Remove margin between header and hero image */
+.site-header {
+  margin-bottom: 0 !important;
+}
+
+.hero-carousel {
+  margin-top: 0 !important;
+}
