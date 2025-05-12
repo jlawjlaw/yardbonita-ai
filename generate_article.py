@@ -99,10 +99,4 @@ def main():
 
         # Save back to spreadsheet
         save_article_to_planning(row_offset, article_data, gpt_output, PLANNING_PATH)
-        print("\n📆 Article written back to planning.xlsx with status 'Draft'.")
-
-    except Exception as e:
-        print(f"\n❌ Exception: {e}")
-
-if __name__ == "__main__":
-    main()
+        print("\n📆 Article wr

@@ -143,7 +143,8 @@ def generate_image_prompt(author, specialty, city, title):
 def generate_image(prompt, date_str, size="1024x1024"):
     fallback_caption = prompt or "Seasonal yard care scene"
     try:
-        filename = re.sub(r"\W+", "-", prompt)[:40].strip("-") + f"-{date_str}.jpg"
+        filename = re.sub(r"\W+", "-", prompt)[:40].strip("-") + f"-{date_str}.png"
+        # Store it directly in image_filename
         return {
             "filename": filename,
             "url": None,
@@ -153,7 +154,7 @@ def generate_image(prompt, date_str, size="1024x1024"):
         }
     except Exception as e:
         print("❌ Exception during image generation:", e)
-        fallback_filename = "fallback-" + date_str + ".jpg"
+        fallback_filename = "fallback-" + date_str + ".png"
         return {
             "filename": fallback_filename,
             "url": None,
@@ -307,7 +308,7 @@ Use a tone that is {persona['tone'].lower()}. Reflect their background, communic
 
         footer_html = build_article_footer(related_articles, author_bio)
         if footer_html:
-            html += "\n" + footer_html
+            html = html.replace("<article_footer_html>", footer_html)
 
         flair_used = len([f for f in flair_list if f in html])
 
