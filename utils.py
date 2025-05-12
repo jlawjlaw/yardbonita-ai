@@ -178,15 +178,26 @@ def save_image_from_url(image_url, filename, folder="ai-images"):
 
 def build_article_footer(related_articles, author_bio):
     blocks = []
+
     if related_articles:
-        related_html = "<div><p><strong>Related</strong></p><ul>"
+        related_html = '<div class="related-articles">\n'
+        related_html += "<p><strong>Related</strong></p>\n<ul>"
         for item in related_articles:
             related_html += f'<li><a href="{item["published_url"]}">{item["post_title"]}</a></li>'
-        related_html += "</ul></div>"
+        related_html += "</ul>\n</div>"
         blocks.append(related_html)
+
     if author_bio:
-        blocks.append(f"<div>{author_bio.strip()}</div>")
-    return "\n".join(blocks).strip() if blocks else None
+        blocks.append(
+            f"""
+<div class="author-byline">
+  <p><strong>About the Author</strong></p>
+  <div>{author_bio.strip()}</div>
+</div>
+""".strip()
+        )
+
+    return "\n\n".join(blocks).strip() if blocks else None
 
 def parse_delimited_response(raw_response):
     expected_sections = {
@@ -382,29 +393,4 @@ def save_article_to_planning(row_index, article_data, gpt_output, planning_path)
     df.at[row_index, "notes"] = notes_block
     thresholds = {"Tier 1": 0.85, "Tier 2": 0.80, "Tier 3": 0.75}
     threshold = thresholds.get(tier, 0.80)
-    rewrite_flag = "yes" if word_count < int(min_words * threshold) else "no"
-    df.at[row_index, "rewrite"] = str(rewrite_flag)
-    df.at[row_index, "status"] = "Draft"
-
-    # Save changes
-    df.to_excel(planning_path, index=False)
-    print("✅ Article and metadata saved to planning.xlsx as 'Draft'")
-
-    
-def get_next_eligible_article(planning_df):
-
-    today = pd.Timestamp(datetime.datetime.now().date())
-    candidates = planning_df[
-        (planning_df["status"].astype(str).str.lower() == "planned") &
-        (pd.to_datetime(planning_df["publish_date"]).dt.date >= today.date()) &
-        ((planning_df["article_html"].isna()) | (planning_df["article_html"].astype(str).str.strip() == ""))
-    ]
-    if candidates.empty:
-        print("⚠️ No eligible articles found.")
-        return None, None
-
-    next_row = candidates.sort_values(by="publish_date").iloc[0]
-    row_index = planning_df.index.get_loc(next_row.name)
-    print(f"✅ Selected row: {next_row['post_title']} (row {row_index})")
-    return next_row.to_dict(), row_index
-
+    rewrite_flag = "yes" if word

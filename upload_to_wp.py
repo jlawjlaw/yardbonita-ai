@@ -1,5 +1,5 @@
 # upload_to_wp.py – YardBonita WordPress Publisher
-# Version: v1.0.7 (safe <img> src replacement + hardcoded category IDs + tag fallback + JSON safety)
+# Version: v1.0.8 (figure-safe <img> src replacement + enforced <p> intro + SEO REST sync)
 
 import os
 import requests
@@ -7,6 +7,8 @@ import pandas as pd
 import re
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
+import argparse
+from utils import enforce_intro_paragraph, remove_intro_heading, fix_encoding_issues  # ✅ intro safety
 
 load_dotenv()
 
@@ -46,15 +48,16 @@ def load_planning():
 def save_planning(df):
     df.to_excel(PLANNING_PATH, index=False, engine="openpyxl")
 
-def upload_image(image_path):
+def upload_image(image_path, alt_text=""):
     url = f"{WP_URL}/wp-json/wp/v2/media"
     filename = os.path.basename(image_path)
-    headers = {
-        "Content-Disposition": f"attachment; filename={filename}",
-        "Content-Type": "image/png"
-    }
+    headers = {"Content-Disposition": f"attachment; filename={filename}"}
+
     with open(image_path, "rb") as img:
-        response = requests.post(url, headers=headers, data=img, auth=auth)
+        files = {'file': (filename, img, 'image/png')}
+        data = {'alt_text': alt_text}
+        response = requests.post(url, headers=headers, files=files, data=data, auth=auth)
+
     if response.status_code == 201:
         media = response.json()
         return media["id"], media["source_url"]
@@ -93,9 +96,19 @@ def get_or_create_tags(tag_list):
     return created_ids
 
 def replace_image_src(html, original_filename, new_url):
-    pattern = r'(<img[^>]+src=["\'])([^"\']*' + re.escape(original_filename) + r')(["\'])'
-    replacement = r'\1' + new_url + r'\3'
-    return re.sub(pattern, replacement, html)
+    """Replaces the src in the <img> tag inside the first <figure> block only."""
+    def replacer(match):
+        figure_html = match.group(0)
+        updated = re.sub(
+            r'(<img[^>]+src=["\'])([^"\']+)(["\'])',
+            r'\1' + new_url + r'\3',
+            figure_html,
+            count=1,
+            flags=re.IGNORECASE
+        )
+        return updated
+
+    return re.sub(r'<figure>.*?</figure>', replacer, html, count=1, flags=re.DOTALL | re.IGNORECASE)
 
 def upload_post(row, image_id=None, category_ids=None, tag_ids=None):
     post_data = {
@@ -105,27 +118,57 @@ def upload_post(row, image_id=None, category_ids=None, tag_ids=None):
         "status": "publish",
         "categories": category_ids or [],
         "tags": tag_ids or [],
-        "meta": {
-            "yoast_head_json": {
-                "title": str(row.get("seo_title") or ""),
-                "description": str(row.get("seo_description") or ""),
-                "keywords": str(row.get("focus_keyphrase") or "")
-            }
+        "meta_input": {
+            "_yoast_wpseo_title": str(row.get("seo_title") or ""),
+            "_yoast_wpseo_metadesc": str(row.get("seo_description") or ""),
+            "_yoast_wpseo_focuskw": str(row.get("focus_keyphrase") or "")
         }
     }
+
+    if image_id:
+        post_data["featured_media"] = image_id
+
     try:
         url = f"{WP_URL}/wp-json/wp/v2/posts"
-        
-        if image_id:
-            post_data["featured_media"] = image_id
-    
         response = requests.post(url, headers=HEADERS, json=post_data, auth=auth)
-        return response.json()["link"] if response.status_code == 201 else None
+        if response.status_code == 201:
+            post_json = response.json()
+            post_id = post_json.get("id")
+            post_url = post_json.get("link")
+            update_yoast_meta(
+                post_id,
+                post_data["meta_input"]["_yoast_wpseo_title"],
+                post_data["meta_input"]["_yoast_wpseo_metadesc"],
+                post_data["meta_input"]["_yoast_wpseo_focuskw"]
+            )
+            return post_url
+        else:
+            return None
     except Exception as e:
         print(f"❌ Upload failed: {e}")
         return None
 
+def update_yoast_meta(post_id, seo_title, seo_description, focus_keyphrase):
+    yoast_url = f"{WP_URL}/wp-json/yardbonita/v1/yoast-meta/{post_id}"
+    payload = {
+        "title": seo_title,
+        "metadesc": seo_description,
+        "focuskw": focus_keyphrase
+    }
+    try:
+        response = requests.post(yoast_url, json=payload, auth=auth)
+        if response.status_code == 200:
+            print(f"✅ Yoast meta updated for post {post_id}")
+        else:
+            print(f"⚠️ Failed to update Yoast meta: {response.text}")
+    except Exception as e:
+        print(f"❌ Exception updating Yoast meta: {e}")
+
 def main():
+    parser = argparse.ArgumentParser(description="Upload YardBonita articles to WordPress.")
+    parser.add_argument("--limit", type=int, default=None)
+    args = parser.parse_args()
+
     df = load_planning()
     ready = df[
         (df["status"].str.strip().str.lower() == "ready to upload") &
@@ -136,9 +179,19 @@ def main():
         print("✅ No articles ready to upload.")
         return
 
+    if args.limit:
+        ready = ready.head(args.limit)
+
     for idx in ready.index:
         row = df.loc[idx]
         print(f"\n📤 Publishing: {row['post_title']}")
+
+        # ✳️ Ensure no <h2> at top, then enforce <p> intro
+        article_html = enforce_intro_paragraph(str(row["article_html"]))
+        article_html = remove_intro_heading(article_html)
+        article_html = fix_encoding_issues(article_html)  # ✅ sanitize bad encoding
+        df.at[idx, "article_html"] = article_html
+        row["article_html"] = article_html
 
         category_slug = str(row.get("category", "")).strip().lower()
         category_id = CATEGORY_SLUG_TO_ID.get(category_slug)
@@ -158,9 +211,9 @@ def main():
             path = os.path.join(IMAGE_FOLDER, image_file)
             if os.path.isfile(path):
                 print("🖼️ Uploading image...")
-                image_id, image_url = upload_image(path)
+                image_id, image_url = upload_image(path, row.get("image_alt_text", ""))
                 if image_url:
-                    updated_html = replace_image_src(str(row["article_html"]), image_file, image_url)
+                    updated_html = replace_image_src(article_html, image_file, image_url)
                     df.at[idx, "article_html"] = updated_html
                     row["article_html"] = updated_html
 
@@ -178,3 +231,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
