@@ -319,7 +319,10 @@ Use a tone that is {persona['tone'].lower()}. Reflect their background, communic
 
         footer_html = build_article_footer(related_articles, author_bio)
         if footer_html:
-            html = html.replace("<article_footer_html>", footer_html)
+            if "<article_footer_html>" in html:
+                html = html.replace("<article_footer_html>", footer_html)
+            else:
+                html += "\n\n" + footer_html
 
         flair_used = len([f for f in flair_list if f in html])
 
@@ -335,9 +338,6 @@ Use a tone that is {persona['tone'].lower()}. Reflect their background, communic
         return parsed, word_count
 
     # Call GPT
-    print("=== SYSTEM PROMPT ===\n", system_prompt)
-    print("=== USER PROMPT ===\n", json.dumps(user_prompt, indent=2))
-
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": json.dumps(user_prompt)}
@@ -348,8 +348,6 @@ Use a tone that is {persona['tone'].lower()}. Reflect their background, communic
     if parsed and word_count >= min_words:
         print(f"✅ Article word count: {word_count} (Tier minimum: {min_words})")
         return parsed
-
-    print(f"❌ Article too short — only {word_count} words (min: {min_words}). Flagging for rewrite.")
 
     if parsed:
         parsed["rewrite"] = "yes"
@@ -362,7 +360,6 @@ Use a tone that is {persona['tone'].lower()}. Reflect their background, communic
         return parsed
 
     return None
-    
 
 def save_article_to_planning(row_index, article_data, gpt_output, planning_path):
     import re
@@ -395,90 +392,4 @@ def save_article_to_planning(row_index, article_data, gpt_output, planning_path)
     threshold = thresholds.get(tier, 0.80)
     rewrite_flag = "yes" if word_count < int(min_words * threshold) else "no"
     df.at[row_index, "rewrite"] = str(rewrite_flag)
-    df.at[row_index, "status"] = "Draft"
-
-    # Save changes
-    df.to_excel(planning_path, index=False)
-    print("✅ Article and metadata saved to planning.xlsx as 'Draft'")
-
-    
-def get_next_eligible_article(planning_df):
-
-    today = pd.Timestamp(datetime.datetime.now().date())
-    candidates = planning_df[
-        (planning_df["status"].astype(str).str.lower() == "planned") &
-        (pd.to_datetime(planning_df["publish_date"]).dt.date >= today.date()) &
-        ((planning_df["article_html"].isna()) | (planning_df["article_html"].astype(str).str.strip() == ""))
-    ]
-    if candidates.empty:
-        print("⚠️ No eligible articles found.")
-        return None, None
-
-    next_row = candidates.sort_values(by="publish_date").iloc[0]
-    row_index = planning_df.index.get_loc(next_row.name)
-    print(f"✅ Selected row: {next_row['post_title']} (row {row_index})")
-    return next_row.to_dict(), row_index
-
-import re
-
-def enforce_intro_paragraph(html: str) -> str:
-    """
-    Ensures the article HTML starts with a <p> paragraph and not an <h2> or other heading.
-    If an <h2> appears first, inserts a generic intro paragraph before it.
-    """
-    html = html.strip()
-    if html.lower().startswith("<h2>"):
-        match = re.match(r"<h2>(.*?)</h2>", html, flags=re.IGNORECASE)
-        if match:
-            first_heading = match.group(0)
-            remaining = html[len(first_heading):].lstrip()
-            intro = (
-                "<p>As the seasons shift, it’s the perfect time to explore what your yard needs most. "
-                "Let’s dive into some timely tips to help your outdoor space thrive.</p>\n"
-            )
-            return intro + "\n" + first_heading + "\n" + remaining
-    return html
-
-def remove_intro_heading(html: str) -> str:
-    """
-    Removes an <h2>Introduction</h2> tag from the top of the article, if present.
-    Leaves the paragraph content intact.
-    """
-    return re.sub(r'^<h2>\s*Introduction\s*</h2>\s*', '', html.strip(), flags=re.IGNORECASE)
-
-def fix_encoding_issues(text):
-    if not isinstance(text, str):
-        return text
-    return (
-        text.replace("â€”", "—")
-            .replace("â€“", "–")
-            .replace("â€˜", "‘")
-            .replace("â€™", "’")
-            .replace("â€œ", "“")
-            .replace("â€�", "”")
-            .replace("â€¦", "…")
-            .replace("‚Äî", "—")  # your example
-            .replace("Ã", "à")   # common issue with accented chars
-    )
-    
-
-# Map common broken surrogate pairs to the intended emoji
-BROKEN_EMOJI_MAP = {
-    "üí°": "🌱",   # plant / nature
-    "üåª": "🦋",   # butterfly / pollinator
-    "üêù": "🐝",   # bee
-    "üåº": "🌼",   # flower / spring
-    "üê¶": "🪶",   # bird/pollinator
-    "üå≥": "🌳",   # tree
-    "üåµ": "🌺",   # tropical plant
-    "üå∫": "🔥",   # sun / heat
-    "üå∑": "✨",   # magic / fairy duster
-    "ü¶ã": "🦋",   # butterfly
-    "üå∏": "🏵️",  # decorative flower
-    "üí° Kid Friendly Box:": "🌟 Kid Friendly Box:",  # special case full replacement
-}
-
-def fix_broken_emojis(text: str) -> str:
-    for broken, emoji in BROKEN_EMOJI_MAP.items():
-        text = text.replace(broken, emoji)
-    return text
+    df.at[row_index, "
