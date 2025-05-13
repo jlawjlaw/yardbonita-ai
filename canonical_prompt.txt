@@ -114,10 +114,20 @@ These are previously published articles from the same city and category.
 
 🧠 SEO Best Practices
 
-Follow Yoast-style guidelines for SEO metadata:
-	•	seo_title: ≤ 60 characters, includes the city and topic
-	•	seo_description: ≤ 155 characters, compelling and benefit-driven
-	•	focus_keyphrase and tags: Reflect actual homeowner search behavior
+You must write optimized SEO metadata that stays within strict character limits:
+- seo_title: Max 60 characters. Must include the city and topic. No fluff. Use simple, direct phrasing.
+- seo_description: Max 155 characters. Make it compelling and benefit-driven. Focus on what the reader gains, not a summary.
+
+You must self-enforce these limits by counting characters and rewriting if needed. Do not return longer values — write concise and optimized from the start.
+
+Examples:
+❌ Too long: “Discover how to transform your yard with these helpful Chandler gardening tips for the spring season.”
+✅ Good: “Spring Gardening Tips for Chandler Yards”
+
+❌ Too long: “In this article, we cover the best methods to control pests in Queen Creek backyards.”
+✅ Good: “Keep Queen Creek pests away with smart outdoor tips”
+
+If your output exceeds the limit, rewrite until it doesn’t — do not just cut words.
 
 ⸻
 

@@ -8,7 +8,7 @@ import re
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 import argparse
-from utils import enforce_intro_paragraph, remove_intro_heading, fix_encoding_issues  # ✅ intro safety
+from utils import enforce_intro_paragraph, remove_intro_heading, fix_encoding_issues, fix_broken_emojis  # ✅ intro safety
 
 load_dotenv()
 
@@ -189,7 +189,9 @@ def main():
         # ✳️ Ensure no <h2> at top, then enforce <p> intro
         article_html = enforce_intro_paragraph(str(row["article_html"]))
         article_html = remove_intro_heading(article_html)
-        article_html = fix_encoding_issues(article_html)  # ✅ sanitize bad encoding
+        article_html = fix_encoding_issues(article_html)      # ✅ generic encoding
+        article_html = fix_broken_emojis(article_html)        # ✅ emoji repair pass
+
         df.at[idx, "article_html"] = article_html
         row["article_html"] = article_html
 
