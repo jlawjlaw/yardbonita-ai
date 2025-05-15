@@ -62,4 +62,18 @@ def main():
     print("The image should look natural and grounded — no fantasy elements, no over-saturation, and no cartoon-like features.")
     print("Ensure the scene reflects the Southeast Valley of Arizona: dry climate, desert-adapted landscaping, warm lighting, and low-lush vegetation.")
     print("Avoid green grass lawns, overcast skies, or non-native trees.")
-    print("Important: never include text, overlay
+    print("Important: never include text, overlays, or whitespace.")
+    print("All images must be: 1200×675px, 16:9 ratio, .png, and named as shown below.\n")
+
+    print("📋 IMAGE REQUEST LIST:")
+    print(f" Post Title: {post_title}")
+    print(f"- UUID: {uuid}")
+    print(f"  Filename: {final_filename}")
+    print(f"  Prompt: {caption}")
+    print(f"  Alt Text: {alt_text}")
+    print("\n✅ Please generate the image now.")
+    print(f"✅ Saved image: {os.path.splitext(final_filename)[0]}")
+
+
+if __name__ == "__main__":
+    main()
