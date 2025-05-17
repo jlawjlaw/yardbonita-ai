@@ -1,20 +1,48 @@
-# generate_article.py – YardBonita Article Generator Entry Point
-# Canonical Version: v1.3.3 (Updated with full error visibility and prompt fixes)
+# generate_article.py – YardBonita Article Generator Entry Point (DB Version)
+# Version: v2.0.1 – Full SQLite Transition, utils_db integrated
 
-import os, pandas as pd, datetime, argparse
-from utils import (
-    load_planning_data,
+import os, argparse, datetime, sqlite3
+import pandas as pd
+from sqlalchemy import create_engine
+from utils_db import (
     get_author_persona,
-    get_related_articles,
+    get_related_articles_from_db,
     generate_article_and_metadata,
-    save_article_to_planning,
-    get_next_eligible_article,
+    update_article_in_db
 )
 
-PLANNING_PATH = "planning.xlsx"
-PERSONA_PATH = "YardBonita_Author_Personas.xlsx"
-PUBLISHED_PATH = "published.xlsx"
-PROMPT_PATH = "canonical_prompt.txt"
+# === Paths ===
+script_dir = os.path.dirname(__file__)
+DB_PATH = os.path.join(script_dir, "yardbonita.db")
+PERSONA_PATH = os.path.join(script_dir, "YardBonita_Author_Personas.xlsx")
+PROMPT_PATH = os.path.join(script_dir, "canonical_prompt.txt")
+
+def get_articles_to_process(conn, mode, count=None):
+    cursor = conn.cursor()
+    today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+
+    if mode == "all_today":
+        cursor.execute("""
+            SELECT rowid, * FROM articles
+            WHERE LOWER(status) = 'planned'
+              AND publish_date = ?
+              AND (article_html IS NULL OR TRIM(article_html) = '')
+        """, (today_str,))
+    elif mode == "create":
+        cursor.execute("""
+            SELECT rowid, * FROM articles
+            WHERE LOWER(status) = 'planned'
+              AND (article_html IS NULL OR TRIM(article_html) = '')
+            LIMIT ?
+        """, (count,))
+    else:
+        cursor.execute("""
+            SELECT rowid, * FROM articles
+            WHERE LOWER(status) = 'planned'
+              AND (article_html IS NULL OR TRIM(article_html) = '')
+            LIMIT 1
+        """)
+    return cursor.fetchall()
 
 def main():
     parser = argparse.ArgumentParser()
@@ -23,105 +51,72 @@ def main():
     args = parser.parse_args()
 
     try:
-        planning_df = load_planning_data(PLANNING_PATH)
+        conn = sqlite3.connect(DB_PATH)
+        engine = create_engine(f"sqlite:///{DB_PATH}")
         persona_df = pd.read_excel(PERSONA_PATH, engine="openpyxl")
-        published_df = pd.read_excel(PUBLISHED_PATH, engine="openpyxl")
+        with open(PROMPT_PATH, "r") as f:
+            system_prompt = f.read()
     except Exception as e:
-        print(f"❌ Failed to load input files: {e}")
+        print(f"❌ Failed to load required files: {e}")
         return
 
-    today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+    mode = "all_today" if args.all_today else "create" if args.create else "single"
+    count = args.create if args.create else None
+    rows = get_articles_to_process(conn, mode, count)
 
-    if args.all_today:
-        rows_to_process = planning_df[
-            (planning_df["publish_date"].astype(str) == today_str) &
-            (planning_df["status"].str.lower() == "planned")
-        ]
-    elif args.create:
-        rows_to_process = planning_df[
-            (planning_df["status"].str.lower() == "planned") &
-            ((planning_df["article_html"].isna()) | (planning_df["article_html"].astype(str).str.strip() == ""))
-        ].head(args.create)
-
-        if rows_to_process.empty:
-            print("❌ No eligible planned articles found for --create.")
-            return
-
-        already_filled = rows_to_process[
-            rows_to_process["article_html"].notna() &
-            rows_to_process["article_html"].astype(str).str.strip().ne("")
-        ]
-        if not already_filled.empty:
-            print("🛑 One or more selected rows already have article_html filled. Aborting.")
-            print(already_filled[["uuid", "post_title", "publish_date"]])
-            return
-
-        row_offsets = rows_to_process.index.tolist()
-        rows_to_process["_row_offset"] = row_offsets
-    else:
-        single_row, row_offset = get_next_eligible_article(planning_df)
-        if single_row is None:
-            print("❌ No eligible article found.")
-            return
-        rows_to_process = pd.DataFrame([single_row])
-        rows_to_process["_row_offset"] = [row_offset]
-
-    if rows_to_process.empty:
-        print("⚠️ No rows to process after filtering.")
+    if not rows:
+        print("⚠️ No eligible articles found.")
         return
 
-    for idx, article_data in rows_to_process.iterrows():
+    for row in rows:
+        rowid = row[0]
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(articles)")
+        columns = [col[1] for col in cursor.fetchall()]
+        data = dict(zip(columns, row[1:]))
+
         try:
-            print(f"🦪 Generating: {article_data['post_title']} ({article_data['uuid']})")
-
-            row_offset = article_data.get("_row_offset")
-            if pd.isna(row_offset):
-                _, row_offset = get_next_eligible_article(planning_df)
-
-            related_articles = get_related_articles(
-                published_df,
-                article_data.get("city", ""),
-                article_data.get("category", ""),
-                article_data.get("publish_date", ""),
-                article_data.get("post_title", "")
+            related = get_related_articles_from_db(
+                engine,
+                data.get("city", ""),
+                data.get("category", ""),
+                data.get("publish_date", ""),
+                data.get("post_title", "")
             )
-            article_data["related_articles"] = related_articles
-
-            with open(PROMPT_PATH, "r") as f:
-                system_prompt = f.read()
+            data["related_articles"] = related
 
             gpt_output = generate_article_and_metadata(
-                article_data, persona_df, published_df, related_articles, system_prompt
+                data, persona_df, None, related, system_prompt
             )
 
             if not gpt_output:
-                article_data["rewrite"] = "yes"
-                article_data["status"] = "Draft"
-                article_data["notes"] = f"GPT failed to meet {article_data['tier']} minimum (retry returned nothing)"
-                article_data["article_html"] = ""
-                article_data["focus_keyphrase"] = ""
-                article_data["seo_title"] = ""
-                article_data["seo_description"] = ""
-                article_data["tags"] = ""
-                save_article_to_planning(row_offset, article_data, {}, PLANNING_PATH)
-                print(f"📉 Short article saved with rewrite flag — 0 words. Retry returned nothing.")
+                print("📉 GPT returned nothing. Flagging for rewrite.")
+                update_article_in_db(conn, rowid, {
+                    "status": "Draft",
+                    "rewrite": "yes",
+                    "notes": f"GPT failed to meet tier {data['tier']} minimum",
+                    "article_html": "",
+                    "focus_keyphrase": "",
+                    "seo_title": "",
+                    "seo_description": "",
+                    "tags": ""
+                }, data)
                 continue
 
-            print("🔑 Metadata:")
+            if gpt_output.get("rewrite") == "yes":
+                print(f"🟨 Short article flagged — {gpt_output['word_count']} words")
+
             for field in ["focus_keyphrase", "seo_title", "seo_description", "tags"]:
                 print(f"  - {field}: {gpt_output.get(field, '')}")
 
-            if not gpt_output.get("article_html"):
-                raise Exception("❌ GPT returned no article_html — skipping save.")
+            update_article_in_db(conn, rowid, gpt_output, data)
 
-            if gpt_output.get("rewrite") == "yes":
-                print(f"🟨 Short article with rewrite flag — {gpt_output['word_count']} words.")
-
-            save_article_to_planning(row_offset, article_data, gpt_output, PLANNING_PATH)
-            print(f"✅ Written: {article_data['post_title']} scheduled for {article_data['publish_date']}")
+            print(f"✅ Written: {data['post_title']} scheduled for {data['publish_date']}")
 
         except Exception as e:
-            print(f"❌ Exception while processing row {idx}: {e}")
+            print(f"❌ Error processing {data.get('uuid', 'unknown')}: {e}")
+
+    conn.close()
 
 if __name__ == "__main__":
     main()

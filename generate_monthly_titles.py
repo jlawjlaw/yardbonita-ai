@@ -1,6 +1,6 @@
 # generate_monthly_titles.py
 # Version: v1.2.2 (No Cliché Filtering, Clean Quote Handling, Verbose Logging)
-print("🧪 THIS IS THE RIGHT SCRIPT (v1.2.3)")
+print("🧪 THIS IS THE RIGHT SCRIPT (v1.2.6)")
 
 import pandas as pd
 import sqlite3
@@ -13,6 +13,8 @@ import sys
 import json
 from dotenv import load_dotenv
 from openai import OpenAI
+
+from tier_author_utils import assign_tier_and_author
 
 # === Setup ===
 load_dotenv()
@@ -115,12 +117,19 @@ def clean_quotes(text):
 
 def gpt_titles_batch(seeds_with_context):
     combined_prompt = BASE_PROMPT + "\n\n"
-    for i, (seed, flair, pool) in enumerate(seeds_with_context, 1):
+    
+    approved_categories = ", ".join(CATEGORY_MAP.keys() - {"Needs Context"})
+    combined_prompt += f"Choose one of the following categories for each title: {approved_categories}.\n\n"
+    
+    combined_prompt = BASE_PROMPT + "\n\n"
+
+    for seed, flair, pool in seeds_with_context:
         flair_str = f"\nFlair suggestions: {', '.join(flair)}" if flair else ""
         seasonal = f"Try to include words like: {', '.join(random.sample(pool, min(5, len(pool))))}"
-        combined_prompt += f"{i}. Seed: \"{seed}\"\n{seasonal}{flair_str}\n\n"
+        combined_prompt += f'Seed: "{seed}"\n{seasonal}{flair_str}\n\n'
 
-    combined_prompt += "\nReturn each title and category in this format:\n[Title] | [Category]\nOne per line. No bullet points. No extra lines."
+    combined_prompt += "Return each title and category in this format:\n[Title] | [Category]\nOne per line. No bullet points. No extra lines."
+
 
     res = client.chat.completions.create(
         model="gpt-4",
@@ -168,8 +177,14 @@ if not needed_rows:
     conn.close()
     sys.exit(0)
 
-print(f"🚀 Requesting {len(needed_rows)} titles from GPT...")
-gpt_lines = gpt_titles_batch([(seed, flair, pool) for _, _, seed, flair, pool in needed_rows])
+gpt_response = gpt_titles_batch([(seed, flair, pool) for _, _, seed, flair, pool in needed_rows])
+
+print("\n🔍 FULL GPT RESPONSE:\n" + "-"*60)
+for idx, line in enumerate(gpt_response):
+    print(f"{idx}: {repr(line)}")
+print("-"*60 + "\n")
+
+gpt_lines = [line.strip() for line in gpt_response if "|" in line]
 
 # === Insert Titles ===
 assigned = 0
@@ -181,7 +196,7 @@ for i, (dt, city, seed, flair, pool) in enumerate(needed_rows):
 
         line = gpt_lines[i].strip()
         if "|" not in line:
-            print(f"⚠️ Skipped (missing '|'): {line}")
+            print(f"⚠️ Skipped line {i} (missing '|'): \"{line}\"")
             continue
 
         raw_title, raw_category = map(str.strip, line.split("|", 1))
@@ -196,12 +211,15 @@ for i, (dt, city, seed, flair, pool) in enumerate(needed_rows):
         slug = title.lower().replace(" ", "-").replace("?", "").replace(",", "").replace("'", "")
         category_slug = CATEGORY_MAP.get(category_name, "needs-context")
 
+        # ➕ Assign tier and author using your external logic
+        tier, author_slug = assign_tier_and_author(title, category_slug)
+
         print(f"🧪 Seed: {seed} | Flair: {', '.join(flair)}")
-        print(f"✅ Inserting: {title} | Category: {category_name} | {city}, {dt}")
+        print(f"✅ Inserting: {title} | Category: {category_name} | Tier: {tier} | Author: {author_slug} | {city}, {dt}")
 
         cursor.execute("""
-            INSERT INTO articles (uuid, publish_date, city, status, post_title, category, slug)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO articles (uuid, publish_date, city, status, post_title, category, slug, tier, author)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             uuid_str,
             dt.isoformat(),
@@ -209,7 +227,9 @@ for i, (dt, city, seed, flair, pool) in enumerate(needed_rows):
             "planned",
             title,
             category_slug,
-            slug
+            slug,
+            tier,
+            author_slug
         ))
         conn.commit()
         assigned += 1

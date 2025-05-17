@@ -1,24 +1,30 @@
-# upload_to_wp.py – YardBonita WordPress Publisher
-# Version: v1.0.9 (includes published.xlsx sync)
+# upload_to_wp_db.py – YardBonita WordPress Publisher (DB Version)
+# Version: v1.1.0
 
 import os
+import sqlite3
 import requests
-import pandas as pd
 import re
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 import argparse
-from utils import enforce_intro_paragraph, remove_intro_heading, fix_encoding_issues, fix_broken_emojis
+from utils import (
+    enforce_intro_paragraph,
+    remove_intro_heading,
+    fix_encoding_issues,
+    fix_broken_emojis
+)
 
+# Paths
+script_dir = os.path.dirname(__file__)
+DB_PATH = os.path.join(script_dir, "yardbonita.db")
+IMAGE_FOLDER = os.path.join(script_dir, "ai-images")
+
+# Load .env
 load_dotenv()
-
 WP_URL = os.getenv("WP_URL")
 WP_USER = os.getenv("WP_USER")
 WP_APP_PASS = os.getenv("WP_APP_PASS")
-
-PLANNING_PATH = "planning.xlsx"
-PUBLISHED_PATH = "published.xlsx"
-IMAGE_FOLDER = "ai-images"
 
 auth = HTTPBasicAuth(WP_USER, WP_APP_PASS)
 HEADERS = {"Content-Type": "application/json"}
@@ -40,14 +46,37 @@ CATEGORY_SLUG_TO_ID = {
     "tree-shrub-care": 586,
     "vegetable-gardening": 677,
     "wildlife-pollinators": 598,
-    "yard-planning-design": 610
+    "yard-planning-design": 610,
+
+    # 🆕 Newly added categories
+    "desert-plant-spotlights": 826,
+    "water-smart-landscaping": 827,
+    "yard-pest-wildlife-control": 828,
+    "functional-outdoor-spaces": 829,
+    "tools-gear-product-reviews": 830,
+    "gardening-for-beginners": 831,
+    "yards-families-pets": 832,
+    "sustainable-yard-living": 833,
+    "extreme-weather-yard-prep": 834
 }
 
-def load_planning():
-    return pd.read_excel(PLANNING_PATH, engine="openpyxl")
+def get_ready_articles(limit=None):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    query = """
+        SELECT * FROM articles
+        WHERE LOWER(status) = 'ready to upload'
+          AND TRIM(article_html) != ''
+          AND TRIM(post_title) != ''
+    """
+    if limit:
+        query += f" LIMIT {limit}"
 
-def save_planning(df):
-    df.to_excel(PLANNING_PATH, index=False, engine="openpyxl")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    colnames = [desc[0] for desc in cursor.description]
+    conn.close()
+    return [dict(zip(colnames, row)) for row in rows]
 
 def upload_image(image_path, alt_text=""):
     url = f"{WP_URL}/wp-json/wp/v2/media"
@@ -104,7 +133,6 @@ def replace_image_src(html, original_filename, new_url):
             flags=re.IGNORECASE
         )
         return updated
-
     return re.sub(r'<figure>.*?</figure>', replacer, html, count=1, flags=re.DOTALL | re.IGNORECASE)
 
 def upload_post(row, image_id=None, category_ids=None, tag_ids=None):
@@ -140,6 +168,7 @@ def upload_post(row, image_id=None, category_ids=None, tag_ids=None):
             )
             return post_url
         else:
+            print(f"❌ Failed to upload post: {response.text}")
             return None
     except Exception as e:
         print(f"❌ Upload failed: {e}")
@@ -153,50 +182,50 @@ def update_yoast_meta(post_id, seo_title, seo_description, focus_keyphrase):
         "focuskw": focus_keyphrase
     }
     try:
-        response = requests.post(yoast_url, json=payload, auth=auth)
+        requests.post(yoast_url, json=payload, auth=auth)
     except Exception as e:
         print(f"❌ Exception updating Yoast meta: {e}")
 
+def mark_as_published(uuid, url):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE articles
+        SET status = 'Published', published_url = ?
+        WHERE uuid = ?
+    """, (url, uuid))
+    conn.commit()
+    conn.close()
+
 def main():
-    parser = argparse.ArgumentParser(description="Upload YardBonita articles to WordPress.")
+    parser = argparse.ArgumentParser(description="Upload YardBonita articles to WordPress from SQLite DB.")
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
 
-    df = load_planning()
-    ready = df[
-        (df["status"].str.strip().str.lower() == "ready to upload") &
-        (df["article_html"].notna()) & (df["post_title"].notna())
-    ]
+    articles = get_ready_articles(limit=args.limit)
 
-    if ready.empty:
+    if not articles:
         print("✅ No articles ready to upload.")
         return
 
-    if args.limit:
-        ready = ready.head(args.limit)
-
-    for idx in ready.index:
-        row = df.loc[idx]
+    for row in articles:
         print(f"\n📄 Publishing: {row['post_title']}")
 
-        article_html = enforce_intro_paragraph(str(row["article_html"]))
-        article_html = remove_intro_heading(article_html)
-        article_html = fix_encoding_issues(article_html)
-        article_html = fix_broken_emojis(article_html)
+        html = enforce_intro_paragraph(row["article_html"])
+        html = remove_intro_heading(html)
+        html = fix_encoding_issues(html)
+        html = fix_broken_emojis(html)
+        row["article_html"] = html
 
-        df.at[idx, "article_html"] = article_html
-        row["article_html"] = article_html
-
-        category_slug = str(row.get("category", "")).strip().lower()
+        category_slug = (row.get("category") or "").strip().lower()
         category_id = CATEGORY_SLUG_TO_ID.get(category_slug)
         if not category_id:
-            print(f"❌ ERROR: Category slug '{category_slug}' not in hardcoded list. Skipping post.")
-            df.at[idx, "status"] = "Category Error"
+            print(f"❌ ERROR: Unknown category '{category_slug}'. Skipping.")
             continue
         category_ids = [category_id]
 
-        tags = str(row.get("tags", "")).split(",") if row.get("tags") else []
-        tag_ids = get_or_create_tags(tags)
+        tags = row.get("tags", "")
+        tag_ids = get_or_create_tags(tags.split(",") if tags else [])
 
         image_id = None
         image_url = None
@@ -207,37 +236,14 @@ def main():
                 print("🖼️ Uploading image...")
                 image_id, image_url = upload_image(path, row.get("image_alt_text", ""))
                 if image_url:
-                    updated_html = replace_image_src(article_html, image_file, image_url)
-                    df.at[idx, "article_html"] = updated_html
-                    row["article_html"] = updated_html
+                    row["article_html"] = replace_image_src(row["article_html"], image_file, image_url)
 
         post_url = upload_post(row, image_id=image_id, category_ids=category_ids, tag_ids=tag_ids)
         if post_url:
-            df.at[idx, "published_url"] = post_url
-            df.at[idx, "status"] = "Published"
             print(f"✅ Success: {post_url}")
-
-            # ✅ Sync to published.xlsx
-            try:
-                published_df = pd.read_excel(PUBLISHED_PATH, engine="openpyxl")
-                row_data = df.loc[idx]
-                uuid = row_data["uuid"]
-
-                if uuid in published_df["uuid"].values:
-                    published_df.loc[published_df["uuid"] == uuid] = row_data.values
-                else:
-                    published_df = pd.concat([published_df, pd.DataFrame([row_data])], ignore_index=True)
-
-                published_df.to_excel(PUBLISHED_PATH, index=False, engine="openpyxl")
-            except Exception as e:
-                print(f"⚠️ Failed to sync published.xlsx: {e}")
-
+            mark_as_published(row["uuid"], post_url)
         else:
-            df.at[idx, "status"] = "Error"
             print(f"❌ Failed to post: {row['post_title']}")
-
-    save_planning(df)
-    print("\n📁 planning.xlsx updated.")
 
 if __name__ == "__main__":
     main()

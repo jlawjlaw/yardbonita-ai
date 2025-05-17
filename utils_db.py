@@ -1,35 +1,16 @@
-# utils.py – YardBonita Unified Article & Image Generation Utilities
-# Canonical Version: v1.2.1
-# Last Modified: 2025-05-10
+# utils_db.py – YardBonita Unified Utilities (Database Version)
+# Canonical Version: v2.0.0
+# Last Modified: 2025-05-15
 
-"""
-🔧 Function Index:
-- load_planning_data(): Read Excel sheet into DataFrame
-- get_author_persona(): Get specialty/persona for author
-- select_flair(): Randomly assign 0–2 flair types from author pool
-- get_related_articles(): Pull 4 city+category-matched links ±2 months
-- clean_internal_links(): Strip unused placeholders
-- generate_image_prompt(): Build prompt string for DALL·E
-- generate_image(): Return image metadata (URL placeholder currently)
-- save_image_from_url(): Download and save image (no-op if url=None)
-- build_article_footer(): Create <div> block for related+author bio
-- parse_delimited_response(): Handle GPT delimited response formatting
-- generate_article_and_metadata(): Main GPT call + processing logic
-
-🆕 Recent Changes:
-- Added prompt_path as explicit parameter to ensure robust file I/O
-- Included Yoast SEO optimization guidelines in system prompt
-- Preserved GPT-provided image metadata: filename, caption, alt text
-"""
-
-import os, json, pandas as pd, datetime, re, random, requests
-from dotenv import load_dotenv
+import os, json, datetime, re, random, requests
 from openai import OpenAI
+from sqlalchemy import text
+import pandas as pd
 
-load_dotenv()
 client = OpenAI()
 
-FLAIR_POOL = {
+# === Flair Configuration ===
+FLAIR_POOL ={
     "Marcus Wynn": ["emoji_paragraph_starts", "expert_quote", "high_value_external_link", "bold_first_sentence"],
     "Sofia Vargas": ["emoji_paragraph_starts", "fun_friendly_language", "inline_definitions", "diy_tip_boxes"],
     "Priya Shah": ["science_fact_boxes", "external_high_quality_link", "clarity_quotes", "graphical_comparison"],
@@ -119,28 +100,30 @@ def select_flair(author):
     roll = random.random()
     return random.sample(flair_options, 2 if roll > 0.80 else 1) if roll > 0.10 else []
 
-def get_related_articles(published_df, city, category, publish_date, post_title):
-    try:
-        publish_date = pd.to_datetime(publish_date)
-        start_date = publish_date - pd.DateOffset(months=2)
-        end_date = publish_date + pd.DateOffset(months=2)
 
-        filtered = published_df.dropna(subset=["post_title", "published_url", "publish_date", "category"]).copy()
-        filtered["category_normalized"] = filtered["category"].astype(str).str.strip().str.lower()
-        filtered["title_normalized"] = filtered["post_title"].astype(str).str.strip().str.lower()
-        filtered["publish_date"] = pd.to_datetime(filtered["publish_date"])
+def get_related_articles_from_db(engine, city, category, publish_date, post_title):
+    import pandas as pd
+    publish_date = pd.to_datetime(publish_date)
+    start_date = publish_date - pd.DateOffset(months=2)
+    end_date = publish_date + pd.DateOffset(months=2)
 
-        filtered = filtered[
-            (filtered["category_normalized"] == str(category).strip().lower()) &
-            (filtered["title_normalized"] != str(post_title).strip().lower()) &
-            (filtered["publish_date"].between(start_date, end_date))
-        ]
+    query = text("""
+        SELECT post_title, published_url
+        FROM published
+        WHERE LOWER(category) = LOWER(:category)
+          AND LOWER(post_title) != LOWER(:post_title)
+          AND publish_date BETWEEN :start AND :end
+        LIMIT 4
+    """)
 
-        return filtered[["post_title", "published_url"]].head(4).to_dict(orient="records")
-
-    except Exception as e:
-        print(f"❌ Error in get_related_articles(): {e}")
-        return []
+    with engine.connect() as conn:
+        result = conn.execute(query, {
+            "category": category,
+            "post_title": post_title,
+            "start": start_date.date(),
+            "end": end_date.date()
+        })
+        return [dict(row._mapping) for row in result.fetchall()]
 
 def clean_internal_links(text):
     return re.sub(r'\[INTERNAL LINK\]', '', text)
@@ -241,10 +224,13 @@ def parse_delimited_response(raw_response):
 
 
 def generate_article_and_metadata(article_data, persona_df, published_df, related_articles, system_prompt):
+    import re
+    import json
+
     title = article_data.get("post_title", "")
     tier = article_data.get("tier", "")
     author = article_data.get("author", "")
-    min_words = {"Tier 1": 1400, "Tier 2": 1100, "Tier 3": 900}.get(tier, 1100)
+    min_words = {"Tier 1": 1800, "Tier 2": 1400, "Tier 3": 1100}.get(tier, 1100)
     flair_list = select_flair(author)
 
     persona = get_author_persona(persona_df, author)
@@ -254,22 +240,29 @@ def generate_article_and_metadata(article_data, persona_df, published_df, relate
         "after_intro" if random.random() < 0.5 else f"after_section_{random.choice([2, 3, 4])}"
     )
 
-    # Persona block injection
+    # Build persona + flair injection block
     persona_block = f"""
 🎨 Persona and Flair Instructions
 
 Write in the voice of **{persona['name']}**, a {persona['city']}-based expert in {persona['specialty'].lower()}.
 Use a tone that is {persona['tone'].lower()}. Reflect their background, communication style, and local knowledge.
-"""
+""".strip()
+
     if flair_list:
-        persona_block += "\nApply the following flair styles naturally and consistently throughout the article:\n"
+        persona_block += "\n\nApply the following flair styles naturally and consistently throughout the article:\n"
         for flair in flair_list:
             persona_block += f"- **{flair}**: {FLAIR_GLOSSARY.get(flair, '')}\n"
         persona_block += "\nOnly use the flair types listed above — do not invent or add others."
     else:
-        persona_block += "\nNo flair styles are included. Write cleanly and clearly without embellishments."
+        persona_block += "\n\nNo flair styles are included. Write cleanly and clearly without embellishments."
 
-    system_prompt = system_prompt.replace("🎨 Persona and Flair Instructions", persona_block.strip())
+    # Inject persona block into system prompt
+    system_prompt = re.sub(
+        r"🎨 Persona and Flair Instructions\n\n\(.*?\)",
+        persona_block,
+        system_prompt,
+        flags=re.DOTALL
+    )
 
     user_prompt = {
         "title": title,
@@ -426,8 +419,6 @@ def get_next_eligible_article(planning_df):
     print(f"✅ Selected row: {next_row['post_title']} (row {row_index})")
     return next_row.to_dict(), row_index
 
-import re
-
 def enforce_intro_paragraph(html: str) -> str:
     """
     Ensures the article HTML starts with a <p> paragraph and not an <h2> or other heading.
@@ -496,3 +487,56 @@ def fix_broken_emojis(text: str) -> str:
     for broken, emoji in BROKEN_EMOJI_MAP.items():
         text = text.replace(broken, emoji)
     return text
+
+def update_article_in_db(conn, rowid, gpt_output, article_data):
+    from re import findall
+
+    word_count = len(findall(r'\b\w+\b', gpt_output.get("article_html", "")))
+    flair_used = gpt_output.get("flair_used", 0)
+    flair_requested = gpt_output.get("flair_requested", 0)
+    tier = article_data.get("tier", "")
+    min_words = {"Tier 1": 1400, "Tier 2": 1100, "Tier 3": 900}.get(tier, 1100)
+    rewrite_flag = "yes" if word_count < int(min_words * 0.85) else "no"
+
+    notes = f"word_count:{word_count}/{min_words}; flair_used:{flair_used}/{flair_requested}; image_placement:{gpt_output.get('image_placement', '')}"
+
+    update_fields = {
+        "status": "Draft",
+        "rewrite": rewrite_flag,
+        "notes": notes,
+        "article_html": gpt_output.get("article_html", ""),
+        "focus_keyphrase": gpt_output.get("focus_keyphrase", ""),
+        "seo_title": gpt_output.get("seo_title", ""),
+        "seo_description": gpt_output.get("seo_description", ""),
+        "tags": ", ".join(gpt_output.get("tags", [])) if isinstance(gpt_output.get("tags"), list) else gpt_output.get("tags", ""),
+        "image_filename": gpt_output.get("image_filename", ""),
+        "image_caption": gpt_output.get("image_caption", ""),
+        "image_alt_text": gpt_output.get("image_alt_text", "")
+    }
+
+    cursor = conn.cursor()
+    columns = ", ".join([f"{k} = ?" for k in update_fields])
+    values = list(update_fields.values()) + [rowid]
+    cursor.execute(f"UPDATE articles SET {columns} WHERE rowid = ?", values)
+    conn.commit()
+    print("✅ Article saved to DB")
+    
+def get_next_eligible_article_from_db(conn):
+    today = datetime.datetime.now().date()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT rowid, * FROM articles
+        WHERE LOWER(status) = 'planned'
+            AND (article_html IS NULL OR TRIM(article_html) = '')
+            AND DATE(publish_date) >= ?
+        ORDER BY publish_date ASC
+        LIMIT 1
+    """, (today,))
+    row = cursor.fetchone()
+    if row:
+        cursor.execute("PRAGMA table_info(articles)")
+        columns = [col[1] for col in cursor.fetchall()]
+        return dict(zip(columns, row[1:])), row[0]
+    else:
+        print("⚠️ No eligible articles found in DB")
+        return None, None
