@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Virtual environments
+myenv/
+.env
+venv/
+.envrc
+
+# Editor/IDE settings
+.vscode/
+.idea/
+.DS_Store
+
+# System files
+Thumbs.db
+
+# Images
+ai-images/
+*.png
+*.jpg
+*.jpeg
+
+# SQLite or database files
+*.db
+
+# Node/npm (if any)
+node_modules/
+dist/
+build/

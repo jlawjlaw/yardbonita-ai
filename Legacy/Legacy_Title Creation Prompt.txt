@@ -1,0 +1,38 @@
+🎯 GOAL: Generate compelling, search-optimized article titles for a local yard and garden content site (YardBonita.com), focused entirely on Gilbert, AZ.
+
+Each title should:
+• Reflect real homeowner needs, concerns, or seasonal goals
+• Be hyper-relevant to the Gilbert desert climate (Zone 9b)
+• Avoid general filler — be useful, timely, or spark curiosity
+• Sound human — like something you'd click or search
+• Be optimized for organic Google search, without being keyword-stuffed
+• NOT include the city name unless natural — most titles will live on city-specific pages
+
+🎨 Style & Variety Rules:
+
+• Vary tone and format — mix questions, how-tos, bold claims, data-backed lists, etc.
+• Focus on what would make a busy homeowner stop scrolling
+
+🏆 Site Strategy:
+• YardBonita earns revenue via Google AdSense and grows via organic search
+• Long-term goal: 4 posts per day, 365/year, across topics like lawn care, watering, DIY landscaping, pest control, native planting, and home efficiency
+• This is a one-person operation: efficiency matters, but **quality and SEO impact are top priority**
+
+✅ Example Great Titles:
+• “What to Plant in Gilbert Before the Monsoons Hit”
+• “Why Your Drip System Keeps Failing — And How to Fix It Fast”
+• “Desert Lawn Rescue: Bring Back Bermuda Grass in 3 Weeks”
+• “5 Gilbert Yard Mistakes That Waste Water (And Money)”
+• “This $30 Soil Fix Changed My Entire Front Yard”
+
+Each new title will be assigned to the first future calendar date in `2025planning.xlsx` with fewer than 4 articles, marked with a `status` of `planned`.
+
+Avoid writing generic category-based titles like “Smart Seasonal Tips for Lawn Care.” Instead, generate standout articles that **solve problems**, **spark interest**, or **target high-intent queries**.
+
+✅ Title Generation Rules (as clarified):
+	•	No internal title pool: I will not reuse or draw from a static list of templates.
+	•	No duplicate checking: Repetition is allowed if it happens naturally across time.
+	•	Full creativity: Every title will be generated fresh using:
+	•	The Title Creation Prompt you uploaded
+	•	The site’s overall tone and mission (high-quality, helpful, SEO-smart seasonal yard advice for Gilbert, AZ)
+	•	Context from the current 2025planning.xlsx

@@ -1,0 +1,62 @@
+
+/* === Custom Styling: Search Widget (YardBonita) === */
+
+.widget_search {
+  background-color: #d8f0d1;
+  border: 1.5px solid #d8f0d1;
+  border-radius: 18px;
+  padding: 2px;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+}
+
+.widget_search > div {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+.widget_search form {
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 1.1rem 1rem 0.7rem 1rem;
+  box-sizing: border-box;
+}
+
+.widget_search form .wp-block-search__inside-wrapper {
+  display: flex;
+  align-items: center;
+  background: #eaf3e5;
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  margin: 0;
+  box-shadow: none;
+  border: none;
+}
+
+.widget_search input[type="search"] {
+  flex: 1;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #b7c9ae;
+  padding: 0.55rem 0.85rem;
+  background: #fff;
+  margin-right: 0.8rem;
+}
+
+.widget_search button {
+  background: #3d613f;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  padding: 0.58rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.widget_search button:hover {
+  background: #254825;
+}

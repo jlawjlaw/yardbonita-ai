@@ -1,0 +1,353 @@
+/* Hide featured image if you want */
+body.single-post .post-image,
+body.single-post .featured-image {
+  display: none !important;
+}
+
+/* OUTER LIGHT GREEN RING */
+.post-outer-wrapper {
+/*  background-color: #d8f0d1;
+  border: 1px solid #d8f0d1;
+  border-radius: 20px;
+  padding: 2px;
+  max-width: 1200px;
+  margin: 2rem auto;
+  box-sizing: border-box;
+*/
+  background-color: #d8f0d1;
+  border: 3px solid #d8f0d1;
+  border-radius: 18px;
+  max-width: 1200px;
+  margin: 2rem auto;
+  box-sizing: border-box;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 2 !important;
+  padding-bottom: 2 !important;
+}
+
+/* CHARCOAL INNER BLOCK */
+.post-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+/* INNER LIGHT GREEN SHELL */
+.post-shell {
+/*
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 3rem;
+  box-sizing: border-box;
+  color: #2c2c2c;
+*/
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 3rem;
+  box-sizing: border-box;
+  color: #2c2c2c;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* REGULAR POST CONTENT STYLING */
+.post-shell h1,
+.post-shell h2,
+.post-shell h3,
+.post-shell p,
+.post-shell li,
+.post-shell a {
+  color: #2c2c2c;
+}
+
+/* Reduce top & bottom margin on post content only */
+body.single-post .inside-article {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+body.single-post /* .post-shell*/ {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 700px) {
+  .post-shell {
+    padding: 1.2rem;
+  }
+}
+
+/* ========== SIDEBAR WIDGET OVERLAPPING EFFECT ========== */
+
+/* 1. OUTER: Thin Light Green Ring */
+.sidebar-city-outer-wrapper {
+  background-color: #d8f0d1;
+  border: 1.5px solid #d8f0d1;
+  border-radius: 18px;
+  padding: 2px;                      /* Thin green border */
+  margin: 0 0 2rem 0;                /* Bottom margin between widgets */
+  box-sizing: border-box;
+}
+
+/* 2. Charcoal Middle Ring */
+.sidebar-city-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 6px;                      /* Thicker charcoal ring */
+  box-sizing: border-box;
+}
+
+/* 3. Generous Light Green Shell */
+.sidebar-city-shell {
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 1.4rem 1.2rem 1.2rem 1.2rem;
+  box-sizing: border-box;
+}
+
+/* 4. Inner Content (Silver) */
+.sidebar-city-posts {
+  background: #d4d4d4;
+  border-radius: 10px;
+  padding: 1.1rem 0.9rem 0.9rem 0.9rem;
+  color: #2c2c2c;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Heading */
+.sidebar-city-posts h3 {
+  color: #2c2c2c;
+  font-size: 1.1rem;
+  margin-bottom: 0.7rem;
+}
+
+/* List + Items */
+.sidebar-post-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.sidebar-post-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+  padding: 0.4rem 0;
+}
+
+/* Thumbnail */
+.sidebar-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: #e2e2e2;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.sidebar-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Post Title Link */
+.sidebar-post-list a {
+  color: #2c2c2c;
+  font-size: 0.96rem;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: 1.3;
+  display: inline-block;
+  max-width: 170px;
+  white-space: normal;
+  word-break: break-word;
+}
+.sidebar-post-list a:hover {
+  color: #305432;
+  text-decoration: underline;
+}
+
+/* Optional: Remove default widget background */
+.widget-area .widget,
+.sidebar .widget,
+.widget-area .widget {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+
+/* ========== SIDEBAR SEARCH WIDGET (Matching Overlap Style) ========== */
+
+/* OUTER: Thin Light Green Ring */
+.sidebar-search-outer-wrapper {
+  background-color: #d8f0d1;
+  border: 1.5px solid #d8f0d1;
+  border-radius: 18px;
+  padding: 2px;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Charcoal Middle Ring */
+.sidebar-search-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+
+/* Generous Light Green Shell */
+.sidebar-search-shell {
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 1.1rem 1rem 0.7rem 1rem;
+  box-sizing: border-box;
+}
+
+/* Search Form */
+.sidebar-search-form {
+  display: flex;
+  align-items: center;
+  background: #eaf3e5;
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  margin: 0;
+  box-shadow: none;
+  border: none;
+}
+
+/* Search Input */
+.sidebar-search-input {
+  flex: 1;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #b7c9ae;
+  padding: 0.55rem 0.85rem;
+  background: #fff;
+  margin-right: 0.8rem;
+}
+
+/* Search Button */
+.sidebar-search-button {
+  background: #3d613f;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  padding: 0.58rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar-search-button:hover {
+  background: #254825;
+}
+
+/* Remove default widget background for sidebar widgets */
+.widget-area .widget,
+.sidebar .widget {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* === FIX PAGE SPACING AND BACKGROUND GAPS === */
+html, body {
+  height: 100%;
+}
+
+
+/* === POST CONTENT LAYOUT IMPROVEMENTS === */
+.post-shell {
+  padding: 1.0rem 1.0rem !important;
+
+}
+
+@media (max-width: 700px) {
+  .post-shell {
+    padding: 1rem 1rem !important;
+  }
+}
+
+/* === SUB POST NAVIGATION LINKS (FOLDERS, TAGS, PREV, NEXT=== */
+
+/* Hide default WP meta output */
+.post-meta,
+.entry-meta,
+.entry-taxonomy {
+  display: none !important;
+}
+
+/* Container wrapping all four lines */
+.custom-meta-nav-wrapper {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+  gap: 0.25rem !important;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+/* Folder + tag + nav container spacing */
+.custom-meta,
+.custom-post-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Meta rows and nav rows layout */
+.meta-cats,
+.meta-tags,
+.nav-previous,
+.nav-next {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  line-height: 1.4;
+}
+
+/* Shared emoji styling */
+.emoji {
+  font-size: 1rem;
+  margin-right: 0.25rem;
+}
+
+/* Link styles */
+.custom-meta a,
+.custom-post-nav a {
+  color: #333;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.custom-meta a:hover,
+.custom-post-nav a:hover {
+  color: #006400;
+  text-decoration: underline;
+}
+.custom-meta .meta-cats,
+.custom-meta .meta-tags,
+.custom-post-nav .nav-previous,
+.custom-post-nav .nav-next {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
+  gap: 0.25rem !important;
+}

@@ -1,0 +1,77 @@
+# YardBonita Annual Content Planning Prompt
+
+This prompt is used to generate a full-year content calendar for YardBonita.com. Each entry must be geographically relevant, seasonally appropriate, and SEO-minded. Use the provided starting point and generate 365 unique article ideas that balance value, topic breadth, and search volume opportunity.
+
+## Instructions for AI:
+
+1. Begin the content calendar starting from tomorrow’s date.
+2. Alternate between seasonal, evergreen, and niche utility content.
+3. Do not repeat article titles or cover the same angle twice.
+4. Make sure all content is highly relevant to the specified city’s climate, laws, and conditions.
+5. Ensure topics rotate categories sensibly and support strong internal linking.
+6. Do not use generic titles — each one must be specific and actionable.
+
+### ✅ Output must be formatted as a spreadsheet or list with the following fields:
+- post_title
+- city
+- category
+- slug (SEO-friendly)
+- tier (Choose one based on topic, season, and article depth potential: see Tier rules below)
+- status = “Planned”
+- publish_date (starting from tomorrow and continuing daily; multiple articles can share the same publish date if categories and topics are distinct)
+- focus_keyphrase = Post Title
+- seo_title = Post Title
+- Leave all other fields blank for now (e.g. Outline, Tags, Notes, etc.)
+
+- Multiple articles can share the same Publish Date if their categories and topics are distinct.
+
+---
+
+### 🔢 Tier System for Article Planning (YardBonita Standard)
+
+Assign each article to one of the three tiers based on the topic's depth, value, and seasonality:
+
+**Tier 1: Cornerstone Content**
+- 1400+ words
+- Evergreen, deeply structured guides
+- Includes FAQ section
+- Strong internal + optional external links
+- Author bio required
+- Example topics: soil health guide, regional lawn care calendars, full conversion guides
+
+**Tier 2: Seasonal Workhorses**
+- 1100–1300 words
+- Focused on seasonally relevant, practical topics
+- FAQ optional
+- Strong internal links
+- Author bio included
+- Example topics: “May Lawn Watering Tips”, “Fall Garden Prep Checklist”
+
+**Tier 3: Utility Boosters**
+- 900–1100 words
+- Addresses niche questions or SEO opportunities
+- Quick, specific answers or techniques
+- Internal linking required, no external
+- Example topics: “How to Sharpen Hedge Clippers”, “Quick Compost Bin Fixes”
+
+✅ Annual Planning Workflow (Revised for Creative Efficiency)
+
+To maintain creative quality and prevent metadata conflicts, planning is now a two-phase process:
+
+🔹 STEP 1: Title Planning
+- Generate a batch of article titles for each city, allowing for 4 articles per day if production allows) Remember to focus on Yard specific concepts
+- Focus purely on creativity, SEO relevance, seasonal value, and local specificity.
+- Only assign UUID and Titles at this stage
+- Titles should vary by topic type, tone, and user intent.
+
+
+🔹 STEP 2: Category Assignment
+- Once titles are reviewed and approved, assign metadata for each:
+  • tier (1, 2, or 3)
+  • category (from the extended list)
+  • author (from predefined personas)
+- This ensures accurate alignment between content type and execution plan.
+
+
+
+🔁 This two-step system preserves creativity and strategic structure.

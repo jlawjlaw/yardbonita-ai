@@ -1,0 +1,13 @@
+-  10 Titles created through July
+-  Remember git add . then git commit 'update message' then git push to check in to the server 
+-  Need to move categories into the db
+-  need to move entire thing to ssd to make it mobile
+-  learn to automate git process
+-  document current flow
+-  -  create a daily process (make titles, write article, create image, upload article, some review, later optmize)
+-  -  - Step 1: Titles: python3 "/Users/justinlaw/Desktop/Yardbonita/file for AI/generate_titles.py" --date 2025-05-16 --target-count 10
+-  -  - Step 2: Articles: python3 "/Users/justinlaw/Desktop/Yardbonita/file for AI/generate_article.py" --date 2025-05-17
+-  -  - Step 3: Images one at a time: python3 "/Users/justinlaw/Desktop/Yardbonita/file for AI/generate_images.py" --date 2025-05-16    
+-  -  - Step 4: Upload to WP batch: python3 "/Users/justinlaw/Desktop/Yardbonita/file for AI/upload_to_wp_db.py"                
+-  -  archive unused files
+

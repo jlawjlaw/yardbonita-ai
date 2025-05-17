@@ -1,0 +1,59 @@
+yes, please print canonical scripts
+
+✅ Canonical Lock Protocol for YardBonita Scripts
+(utils.py + generate_article.py)
+Last Confirmed Version: Canonical v1.0.7
+
+This protocol governs the locked development, synchronization, and print-handling of utils.py and generate_article.py for YardBonita. It prevents regression, feature loss, or accidental overwrites by ensuring all work is version-controlled, print-confirmed, and traceable at the function level.
+
+⸻
+
+🔐 Canonical Lock System: How It Works
+
+Once you say “yes, please print canonical scripts”, the following rules are permanently active unless explicitly revoked:
+
+1. Both Scripts Are Always Printed Together
+	•	utils.py and generate_article.py are treated as a single locked unit.
+	•	They are always printed back-to-back in the same response — no second confirmation needed.
+
+2. Canonical Headers Are Embedded
+
+Each script must begin with a standardized version header that includes:
+	•	✅ Script name and purpose
+	•	✅ Canonical Version number (e.g., Canonical v1.0.7)
+	•	✅ Last Modified date
+	•	✅ Full list of current supported features, not just recent changes
+	•	✅ Function-Level Index listing each major function and its purpose
+	•	✅ Most recent changes in a separate “🆕 Recent Changes” block (required)
+
+3. Version Safety and Alignment Are Enforced
+	•	Both scripts must carry the exact same canonical version number.
+	•	Any modification to one will trigger reprinting of both to maintain integrity.
+
+⸻
+
+⚠️ Development Ground Rules (Under Lock)
+	•	❌ No previously working feature may be removed, rewritten, or skipped unless:
+	•	You explicitly request the change, or
+	•	I inform you beforehand and you approve it.
+	•	🛡️ The following features must remain intact and functional:
+	•	Flair systems and persona tone integration
+	•	“About the Author” auto-appending logic (for Tier 1 and 2)
+	•	Internal and rela ted link logic (with fallback <ul> if no inline links)
+	•	DALL·E image generation (with fallback filename/metadata when needed)
+	•	Internal placeholder cleanup (e.g., [INTERNAL LINK])
+	•	Clean HTML structure (no <h1> inside <body>)
+	•	🧪 Scripts run in test mode only — no writes to spreadsheet unless explicitly unlocked
+
+⸻
+
+🧠 Memory + Regression Protection Strategy
+
+Memory cannot persist between sessions. To recover state immediately in any future session, paste:
+
+“Apply Canonical Lock Protocol and resume with latest confirmed version.”
+
+When you do:
+	•	I will resume using the last known locked version of both scripts (you may paste them if needed).
+	•	I will not infer, guess, or silently rewrite any logic from memory.
+	•	I will enforce function-level diffing, version headers, and feature protection automatically.

@@ -1,0 +1,180 @@
+
+
+
+/* === LATEST ARTICLES WRAPPER (preserve existing borders) === */
+.latest-articles-wrapper {
+  background-color: #d8f0d1;
+  border: 3px solid #d8f0d1;
+  border-radius: 20px;
+  max-width: 1280px;
+  margin: 0 auto 2rem auto;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.latest-articles-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 5px;
+}
+
+.latest-articles-shell {
+  background-color: #d8f0d1;
+  border-radius: 12px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* === CARD STRUCTURE === */
+.latest-posts-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.latest-post-card {
+  background-color: #3d613f;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-bottom: 5px;
+  padding: 16px; /* Instead of margin on card-inner */
+  position: relative;
+}
+
+.latest-post-card:hover {
+  background-color: #2a402a;
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.latest-post-card a {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.card-link {
+  background: transparent !important;
+  display: block;
+}
+
+/* Make the inner card slightly smaller to reveal the outer card on hover */
+
+.card-inner {
+  background-color: #d8f0d1;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  margin: 0; /* ← important */
+}
+
+
+/* === Thumbnail Left (fixed size) === */
+.thumbnail {
+  flex: 0 0 100px;
+  max-width: 100px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: auto;
+  max-width: 100px;
+  border-radius: 6px;
+  object-fit: cover;
+  display: block;
+}
+
+/* === CONTENT ON RIGHT === */
+.card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.card-content h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2c2c2c;
+  font-weight: bold;
+}
+
+.card-content p {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  color: #2c2c2c;
+}
+
+/* === RESPONSIVE: PRESERVE LAYOUT === */
+@media (max-width: 768px) {
+  .card-inner {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+
+  .thumbnail {
+    flex: 0 0 100px;
+  }
+
+  .card-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .card-content p {
+    font-size: 0.95rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .card-inner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .thumbnail {
+    flex: 0 0 auto;
+    width: 80px;
+    height: auto;
+    max-width: 80px;
+    max-height: 80px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .thumbnail img {
+    width: 100%;
+    height: auto;
+    max-height: 80px;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px;
+  }
+
+  .card-content h3 {
+    font-size: 1rem;
+  }
+
+  .card-content p {
+    font-size: 0.9rem;
+  }
+}
+
+

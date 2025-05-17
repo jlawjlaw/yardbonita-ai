@@ -1,0 +1,62 @@
+{
+  "Winter Wonderland": {
+    "limit": 5,
+    "season": "winter"
+  },
+  "Snowy Sanctuary": {
+    "limit": 5,
+    "season": "winter"
+  },
+  "Bundle Up": {
+    "limit": 4,
+    "season": "winter"
+  },
+  "Frosty Fun": {
+    "limit": 6,
+    "season": "winter"
+  },
+  "Spring Awakening": {
+    "limit": 6,
+    "season": "spring"
+  },
+  "Blooming Beauty": {
+    "limit": 6,
+    "season": "spring"
+  },
+  "Sunny Days Ahead": {
+    "limit": 6,
+    "season": "spring"
+  },
+  "Summer Sizzle": {
+    "limit": 6,
+    "season": "summer"
+  },
+  "Beat the Heat": {
+    "limit": 5,
+    "season": "summer"
+  },
+  "Cool Down Your Yard": {
+    "limit": 5,
+    "season": "summer"
+  },
+  "Autumn Glow": {
+    "limit": 6,
+    "season": "fall"
+  },
+  "Fall Foliage Frenzy": {
+    "limit": 5,
+    "season": "fall"
+  },
+  "Harvest Happiness": {
+    "limit": 4,
+    "season": "fall"
+  },
+  "Rain or Shine": {
+    "limit": 4,
+    "season": null
+  },
+  "Celebrate the Season": {
+    "limit": 4,
+    "season": null
+  }
+}

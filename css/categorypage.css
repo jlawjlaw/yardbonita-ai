@@ -1,0 +1,94 @@
+/* ===================================================
+   CATEGORY PAGE STYLES – YardBonita
+=================================================== */
+
+/* === Shared Wrapper === */
+.categorypage-outer-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  box-sizing: border-box;
+}
+
+/* === Section Header === */
+.categorypage-outer-wrapper h1,
+.categorypage-outer-wrapper h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c2c2c;
+  margin-bottom: 1rem;
+}
+
+.category-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+/* === Post List Layout === */
+.categorypage-postlist-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* === Post Card === */
+.categorypage-postlist-wrapper .post-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  width: calc(33.333% - 1.5rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.categorypage-postlist-wrapper .post-card:hover {
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+}
+
+.categorypage-postlist-wrapper .post-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.categorypage-postlist-wrapper .post-card .post-info {
+  padding: 1rem;
+}
+
+.categorypage-postlist-wrapper .post-card h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem;
+  color: #3d613f;
+}
+
+.categorypage-postlist-wrapper .post-card p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.categorypage-postlist-wrapper .post-card a {
+  color: #3d613f;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: auto;
+  padding-top: 1rem;
+  display: inline-block;
+}
+
+/* === Responsive Cards === */
+@media (max-width: 1024px) {
+  .categorypage-postlist-wrapper .post-card {
+    width: calc(50% - 1rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .categorypage-postlist-wrapper .post-card {
+    width: 100%;
+  }
+}
