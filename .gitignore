@@ -19,16 +19,16 @@ venv/
 # System files
 Thumbs.db
 
-# Images
+# Images (AI-generated or otherwise)
 ai-images/
 *.png
 *.jpg
 *.jpeg
 
-# SQLite or database files
+# SQLite or other database files
 *.db
 
-# Node/npm (if any)
+# Node/npm (if present)
 node_modules/
 dist/
 build/
