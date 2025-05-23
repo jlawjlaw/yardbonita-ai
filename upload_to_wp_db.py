@@ -9,7 +9,7 @@ import json
 from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 import argparse
-from LEGACY_utils import (
+from utils_db import (
     enforce_intro_paragraph,
     remove_intro_heading,
     fix_encoding_issues,

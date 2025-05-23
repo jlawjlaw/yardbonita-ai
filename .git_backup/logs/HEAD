@@ -1,0 +1,10 @@
+0000000000000000000000000000000000000000 3124468746264abd6ad7d5814d148b5b5445c285 Justin Law <justinlaw@Justins-Personal-MacBook.local> 1747059768 -0700	commit (initial): Initial commit with .gitignore applied
+3124468746264abd6ad7d5814d148b5b5445c285 bf7998df813b5af6e2817e684de54370582b4933 Justin Law <justinlaw@Justins-Personal-MacBook.local> 1747059842 -0700	commit: Update used_phrases.json
+bf7998df813b5af6e2817e684de54370582b4933 a6d1dde84eb12657787c44ebffaaaaf2a2d9cc33 Justin Law <justinmlaw@gmail.com> 1747083879 -0700	commit: Built out upload to wordpress. and changed start script to ensure titles don't duplicate
+a6d1dde84eb12657787c44ebffaaaaf2a2d9cc33 8715017aa5f4b30fea58d255becf7a215a07ea52 Justin Law <justinmlaw@gmail.com> 1747093545 -0700	commit: 🔒 Snapshot: v1.0.8 stable with intro enforcement and flair emoji pass-through
+8715017aa5f4b30fea58d255becf7a215a07ea52 13816318abf8ad14384d92f1f4fa881bb77a9895 Justin Law <justinmlaw@gmail.com> 1747094595 -0700	commit: done for the day
+13816318abf8ad14384d92f1f4fa881bb77a9895 5ebc2b146cd571504b28e98d87257ac142c4a11a Justin Law <justinmlaw@gmail.com> 1747138854 -0700	commit: Morning update
+5ebc2b146cd571504b28e98d87257ac142c4a11a 2825b35aa0e979a135ac5a596578390e57c97088 Justin Law <justinmlaw@gmail.com> 1747281490 -0700	commit: v1.2.3 — Removed cliché filter, improved logging, resolved GPT parsing
+2825b35aa0e979a135ac5a596578390e57c97088 23a68931b11a1107ae1eb4d29c56d67da0f767a0 Justin Law <justinmlaw@gmail.com> 1747281589 -0700	commit: Stable release v1.2.3 — fixed GPT title parsing, removed filtering, verified inserts
+23a68931b11a1107ae1eb4d29c56d67da0f767a0 c92c27146528978f46c47eb7b329de8854e155e8 Justin Law <justinmlaw@gmail.com> 1747450603 -0700	commit: Fix post-publish insertion bug, enforce clean insert into published
+c92c27146528978f46c47eb7b329de8854e155e8 3fc8d278d67746fa171512593a904a6bb431b0a8 Justin Law <justinmlaw@gmail.com> 1747498889 -0700	commit: Clean repo: ignore images, update scripts, prep for deploy

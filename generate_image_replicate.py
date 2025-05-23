@@ -18,6 +18,30 @@ REPLICATE_MODEL = "ideogram-ai/ideogram-v3-turbo"
 # === Ensure output folder ===
 os.makedirs(IMAGE_FOLDER, exist_ok=True)
 
+def sanitize_image_prompt(prompt: str) -> str:
+    """Ensures YardBonita's full visual prompt rules are appended once to any image prompt."""
+    visual_rules_block = """
+🖼️ YardBonita Claude Image Prompt 
+
+Generate a photorealistic, high-quality image suitable for a residential backyard or front yard in the Southeast Valley of Arizona (including Gilbert, Chandler, Queen Creek, Mesa). The scene must reflect a dry desert climate, with realistic lighting, desert-adapted landscaping, and authentic materials commonly seen in suburban neighborhoods.
+
+⛔️ DO NOT include:
+	•	Any text, labels, measurements, or overlays.
+	•	Any wooden features — no wood used in raised beds, fences, benches, pergolas, or sheds.
+	•	Any non-native trees, fantasy elements, saturated colors, or visual clutter.
+	•	Any cartoon-like styles, overcast skies, or unmaintained spaces.
+ 	•	Any shared backyards, multi-family yards, or ambiguous property lines — use private, enclosed residential lots only.
+
+🏞 Composition Suggestions:
+	•	Raised beds, if included, must be made from composite, stone, or concrete block (no visible wood).
+	•	Vary the view — front yards, backyards, gravel walkways, side yards, desert patio setups, or cactus garden beds.
+	•	Keep the layout tidy, suburban, and appropriate to Arizonas desert aesthetic.
+""".strip()
+
+    if "REVISED CLAUDE IMAGE PROMPT INSTRUCTIONS" not in prompt:
+        return f"{prompt.strip()}\n\n{visual_rules_block}"
+    return prompt.strip()
+
 # === Utility: Ensure filename uniqueness ===
 def ensure_unique_filename(filename):
     base, ext = os.path.splitext(filename)
@@ -93,7 +117,8 @@ def main():
         print(f"\n🎯 Generating image for UUID: {uuid}\nPrompt: {prompt}\n")
 
         try:
-            image_url = generate_image(prompt)
+            sanitized_prompt = sanitize_image_prompt(prompt)
+            image_url = generate_image(sanitized_prompt)
             img_data = requests.get(image_url).content
             filename = ensure_unique_filename(image_filename)
             save_path = os.path.join(IMAGE_FOLDER, filename)

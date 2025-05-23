@@ -285,7 +285,7 @@ def parse_delimited_response(raw_response):
     for key, value in pattern.findall(raw_response):
         normalized_key = key.lower()
         if normalized_key in expected_sections:
-            expected_sections[normalized_key] = value.strip()
+            expected_sections[normalized_key] = value.strip() if isinstance(value, str) else ""
 
     return expected_sections
 
@@ -540,19 +540,23 @@ def update_article_in_db(conn, gpt_output, article_data):
     notes = f"word_count:{word_count}/{min_words}; flair_used:{flair_used}/{flair_requested}; image_placement:{gpt_output.get('image_placement', '')}"
 
     # === Build update fields from GPT output ===
+    def safe_strip(val):
+        return val.strip() if isinstance(val, str) else ""
+
     update_fields = {
         "rewrite": rewrite_flag,
         "notes": notes,
-        "article_html": gpt_output.get("article_html", ""),
-        "focus_keyphrase": gpt_output.get("focus_keyphrase", ""),
-        "seo_title": gpt_output.get("seo_title", ""),
-        "seo_description": gpt_output.get("seo_description", ""),
-        "tags": ", ".join(gpt_output.get("tags", [])) if isinstance(gpt_output.get("tags"), list) else (gpt_output.get("tags") or ""),
-        "image_filename": gpt_output.get("image_filename", ""),
-        "image_caption": gpt_output.get("image_caption", ""),
-        "image_alt_text": gpt_output.get("image_alt_text", ""),
-        "image_prompt": gpt_output.get("image_prompt", "")
+        "article_html": safe_strip(gpt_output.get("article_html")),
+        "focus_keyphrase": safe_strip(gpt_output.get("focus_keyphrase")),
+        "seo_title": safe_strip(gpt_output.get("seo_title")),
+        "seo_description": safe_strip(gpt_output.get("seo_description")),
+        "tags": ", ".join(gpt_output.get("tags", [])) if isinstance(gpt_output.get("tags"), list) else safe_strip(gpt_output.get("tags")),
+        "image_filename": safe_strip(gpt_output.get("image_filename")),
+        "image_caption": safe_strip(gpt_output.get("image_caption")),
+        "image_alt_text": safe_strip(gpt_output.get("image_alt_text")),
+        "image_prompt": safe_strip(gpt_output.get("image_prompt")),
     }
+    
 
     # Conditionally set the status
     if article_data.get("status") in ("Planned", "In Batch", None):
@@ -610,32 +614,40 @@ def get_next_eligible_article_from_db(conn):
         print("⚠️ No eligible articles found in DB")
         return None, None
     
+import re
+
 def link_inline_titles_to_articles(html: str, related_articles: list[dict]) -> str:
     """
     Replaces plain-text mentions of related article titles with proper <a href="..."> links.
-    Only links exact title matches, case-insensitive, and avoids re-linking if already wrapped.
+    Only links exact title matches, avoids malformed URLs like "#" or "None", and prevents re-linking.
     """
     for article in related_articles:
-        title = article.get("post_title", "").strip()
-        url = article.get("published_url", "").strip()
-        if not title or not url or url == "None":
+        title = str(article.get("post_title") or "").strip()
+        url = str(article.get("published_url") or "").strip()
+
+        # Skip if title or URL is invalid
+        if not title or not url or url.lower() in {"none", "#"}:
             continue
 
         # Skip if already linked
         if f'href="{url}"' in html:
             continue
 
-        # Use negative lookbehind to avoid replacing inside existing <a> tags
+        # Replace first exact match (case-insensitive) not already in an <a> tag
         pattern = rf'(?<![">])\b({re.escape(title)})\b'
         replacement = rf'<a href="{url}">\1</a>'
         html = re.sub(pattern, replacement, html, count=1, flags=re.IGNORECASE)
 
-    return html    
+    return html
+
+def remove_placeholder_links(html: str) -> str:
+    return re.sub(r'<a href="#">(.*?)</a>', r'\1', html, flags=re.IGNORECASE)
     
 def validate_and_process(raw_output, related_articles, author_bio, flair_list, image_instruction):
     parsed = parse_delimited_response(raw_output)
     html = parsed.get("article_html", "")
     html = link_inline_titles_to_articles(html, related_articles)
+    html = remove_placeholder_links(html)
     if not html.strip():
         return None, 0
 

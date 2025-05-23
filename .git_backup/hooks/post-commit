@@ -1,0 +1,4 @@
+#!/bin/sh
+VERSION=$(date +"v%Y%m%d%H%M%S")
+git tag -a "$VERSION" -m "Auto tag: $VERSION"
+git push origin "$VERSION"

@@ -1,0 +1,190 @@
+/* ===================================================
+   HEADER & FOOTER CLEAN STYLE: YardBonita
+=================================================== */
+
+/* === HEADER === */
+.site-header {
+  background-color: #d8f0d1 !important;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+  border-radius: 0;
+  box-shadow: none !important;
+}
+
+/* Logo in Header */
+.site-header .site-logo img {
+  max-height: 52px;
+  width: auto;
+  height: auto;
+  display: block;
+}
+
+/* === MAIN NAVIGATION === */
+.main-navigation,
+.main-navigation ul {
+  background-color: #d8f0d1 !important;
+  border-radius: 0 0 12px 12px;
+  margin-bottom: 0;
+}
+
+.main-navigation a {
+  color: #2c2c2c;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.75em 1.5em;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.main-navigation a:hover,
+.main-navigation a:focus {
+  background-color: #c7e6bc;
+  color: #254825;
+}
+
+/* Mobile Navigation (Hamburger) */
+@media (max-width: 900px) {
+  .main-navigation .inside-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .main-navigation .navigation-branding {
+    margin-right: auto;
+  }
+
+  .main-navigation .menu-toggle {
+    margin-left: auto;
+    order: 2;
+  }
+
+  .main-navigation,
+  .main-navigation ul {
+    border-radius: 0;
+  }
+
+  .site-header {
+    padding: 1rem;
+  }
+}
+
+/* === FOOTER === */
+
+/* === FULL FOOTER WRAPPER === */
+.footer-outer-wrapper {
+  background-color: #d8f0d1;
+  border: 3px solid #d8f0d1;
+  max-width: 1280px;
+  margin: 0 auto 0rem auto;
+  box-sizing: border-box;
+  padding: 2px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+}
+
+
+/* === charcoal INNER RING === */
+.footer-inner {
+  background-color: #2f2f2f;
+  border-radius: 16px;
+  padding: 3px;
+  box-sizing: border-box;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-sizing: border-box;
+}
+
+/* === DARK GREEN MAIN FOOTER === */
+.footer-shell {
+  background-color: #3d613f;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  padding: 3px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+
+/* Footer Font General */
+.site-footer,
+.site-footer *,
+.site-footer li,
+.site-footer a {
+  font-size: 1rem !important;
+  line-height: 1.5;
+}
+
+/* === CUSTOM FOOTER CONTENT STYLE === */
+.footer-content h4 {
+  color: #d8f0d1;
+  font-size: 1.4rem;
+  margin-top: 1rem;
+}
+
+.footer-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-content ul li {
+  display: inline-block;
+  margin: 0 0.75rem;
+  padding-bottom: 0;
+}
+
+.footer-content ul li a {
+  color: #d8f0d1;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.footer-content ul li a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* === LOGO IN NAVIGATION BAR === */
+.navigation-branding img {
+  max-height: 48px;
+  width: auto;
+  height: auto;
+  display: block;
+}
+
+.footer-category-links {
+  font-size: 0.95rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0; /* tighter spacing below heading */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem; /* reduced vertical gap, keep horizontal spacing */
+}
+
+.footer-category-links li {
+  display: inline-block;
+}
+
+.footer-category-links a {
+  color: #d8f0d1;
+  text-decoration: none;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.footer-category-links a:hover {
+  color: #f0f0f0;
+  text-decoration: underline;
+}

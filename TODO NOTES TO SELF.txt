@@ -1,0 +1,29 @@
+
+-  Remember git add . then git commit -m "update message" then git push to check in to the server 
+-  Need to move categories into the db
+-  need to move entire thing to ssd to make it mobile
+-  learn to automate git process
+-  Figure out how to handle Southeast Valley vs. the Southeast 
+Valley
+-  Update tier_author_utils with category author pools from a db
+-  Add social sharing options to posts
+
+-  document current flow - SCRIPTED CRON JOBS from myenv
+-  - need to create titles
+-  - python generate_batch_articles.py
+-  - python fetch_batch_results.py
+-  - python generate_image_replicate.py --limit 20
+-  - python upload_to_wp_db.py
+
+          
+-  archive unused files
+
+- to create environment:
+  deactivate
+  rm -rf myenv
+  python3 -m venv myenv
+  source myenv/bin/activate
+  pip install --upgrade pip
+ pip install -r requirements.txt
+
+
