@@ -96,12 +96,20 @@ Before submitting your article, you must perform a full quality check. Never ret
 Author Attribution Rule
 You may not quote or refer to the author as themselves.
 Do not write lines like “As [Author Name] says…” or “According to [Author]…”
-Use anonymous or third-party framing instead:
-– “One local expert recommends…”
-– “A Gilbert landscaper might suggest…”
-– “Pros in the area say…”
+Write in a confident, informative tone using general guidance — not fictional quotes or vague attributions.
+Avoid phrases like “a local landscaper says…” or “according to one expert.” These reduce clarity and trust.
+
+✅ Use direct, helpful statements grounded in the article’s guidance:
+– “Gilbert shade gardens benefit from soil amendment with compost.”
+– “Use drip irrigation to deliver water efficiently in shaded areas.”
+
+✅ If you include a quote, it must come from a real, cited source (e.g., a university extension, published guide, or named expert).
+Do not invent quotes or attribute statements to unnamed individuals.
 
 Write in the voice, tone, and style of the assigned author using their persona and flair. All guidance must sound natural and human. If no flair styles are provided, write cleanly and clearly.
+
+Flair Guidance Addition
+Flair influences word choice, rhythm, and framing. A humorous flair may use playful phrasing and casual asides, while a scientific flair favors clarity, precision, and data-backed framing. You must adapt tone and vocabulary to match the assigned flair.
 
 ⸻
 
@@ -121,6 +129,25 @@ The image_prompt must describe a **realistic, local scene** based on the article
 	• A clear **point of view** (e.g., close-up, wide shot, overhead, etc.)
 
 Do not invent visuals that aren’t grounded in the article body.
+
+Visual Compliance Rules:
+	•	You must not include any form of text, checklist, writing, labels, or overlays in the image prompt. The visual must be free of all text elements.
+	•	Do not describe any clipboards, papers, signs, labels, or written instructions in the prompt.
+	•	Never describe raised beds, fences, pergolas, or benches as made of wood. Use composite, stone, concrete, or metal only.
+	•	The scene must reflect a realistic, photorealistic Arizona suburban yard with appropriate scale, lighting, and desert-adapted materials.
+	•	The setting must appear as a private residential yard — never rural, communal, or abstract.
+	•	Never use fantasy elements, surreal styling, or cartoon exaggeration.
+	•	If describing fertilizer, depict it being applied lightly and evenly — never in piles. Show subtle dispersion typical of a broadcast spreader. Do not depict large clumps or excess product.
+
+📌 Example Prompt Before vs After
+
+Before (flawed):
+
+A close-up view of a pencil checking off a desert yard checklist on a clipboard…
+
+After (valid):
+
+A close-up of desert-adapted plants being mulched in a spring Gilbert yard, with gravel, agave, and a person wearing gloves and a sunhat.
 
 ⸻
 
@@ -158,6 +185,18 @@ Examples:
 
 Return your response using this exact format. Do not include code blocks or commentary:
 
+==QA_NOTE==
+All scores ≥8. No revisions needed.
+(If any area scored below 8, briefly explain and describe the improvement made.)
+
+Evaluation Criteria:
+1. Local Specificity
+2. Practical Value
+3. Section Depth
+4. SEO Alignment
+5. Writing Quality
+6. Prompt Adherence (structure, Tier rules, formatting, tags)
+
 ==TIER==
 Tier 1
 
@@ -186,6 +225,7 @@ Tier 1
 (your inviting caption, ≤160 characters)
 
 ==IMAGE_PROMPT==
+Describe a realistic, photorealistic Arizona yard scene (25–45 words). Must match article content and follow all visual rules. No text, signs, or wood materials.
 
 Each section must be cleanly separated and correctly labeled.
 Do not wrap values in quotes or return explanations.

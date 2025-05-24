@@ -152,11 +152,26 @@ def get_or_create_tags(tag_list):
     return created_ids
 
 def replace_image_src(html, original_filename, new_url):
-    pattern = re.compile(rf'(<img[^>]+src=["\'][^"\']*{re.escape(original_filename)}[^"\']*["\'])', re.IGNORECASE)
+    if not original_filename or not new_url:
+        print(f"⚠️ Skipping replace_image_src: missing filename or URL.")
+        return html
+
+    # Escape and match only the basename (in case full path accidentally leaked)
+    base_filename = os.path.basename(original_filename)
+    pattern = re.compile(rf'(<img[^>]+src=["\'][^"\']*{re.escape(base_filename)}[^"\']*["\'])', re.IGNORECASE)
+
     def replacer(match):
         tag = match.group(0)
         return re.sub(r'(src=["\'])([^"\']+)(["\'])', rf'\1{new_url}\3', tag, count=1)
-    return pattern.sub(replacer, html, count=1)
+
+    new_html = pattern.sub(replacer, html, count=1)
+
+    if new_html == html:
+        print(f"⚠️ No <img> tag replaced for: {base_filename}")
+    else:
+        print(f"✅ Image src replaced for: {base_filename} → {new_url}")
+
+    return new_html
 
 def upload_post(row, author_lookup, image_id=None, category_ids=None, tag_ids=None):
     author_slug = str(row.get("author") or "").strip()
@@ -272,6 +287,7 @@ def main():
         tag_ids = get_or_create_tags(row.get("tags", "").split(",") if row.get("tags") else [])
 
         image_id, image_url, updated_filename = None, None, None
+        original_img_file = row.get("image_original_filename") or row.get("image_filename")
         img_file = str(row.get("image_filename", "")).strip()
         if img_file:
             path = os.path.join(IMAGE_FOLDER, img_file)
@@ -279,7 +295,8 @@ def main():
                 print("🖼️ Uploading image...")
                 image_id, image_url, updated_filename = upload_image(path, row.get("image_alt_text", ""))
                 if image_url:
-                    row["article_html"] = replace_image_src(row["article_html"], img_file, image_url)
+                    # ✅ Replace using the original filename that appears in the HTML
+                    row["article_html"] = replace_image_src(row["article_html"], original_img_file.strip(), image_url)
                     if updated_filename and updated_filename != img_file:
                         row["image_filename"] = updated_filename
                         update_article_image_filename(row["uuid"], updated_filename)

@@ -23,19 +23,28 @@ def sanitize_image_prompt(prompt: str) -> str:
     visual_rules_block = """
 🖼️ YardBonita Claude Image Prompt 
 
-Generate a photorealistic, high-quality image suitable for a residential backyard or front yard in the Southeast Valley of Arizona (including Gilbert, Chandler, Queen Creek, Mesa). The scene must reflect a dry desert climate, with realistic lighting, desert-adapted landscaping, and authentic materials commonly seen in suburban neighborhoods.
+✅ YardBonita Claude Image Prompt — Clean Version
 
-⛔️ DO NOT include:
-	•	Any text, labels, measurements, or overlays.
-	•	Any wooden features — no wood used in raised beds, fences, benches, pergolas, or sheds.
-	•	Any non-native trees, fantasy elements, saturated colors, or visual clutter.
-	•	Any cartoon-like styles, overcast skies, or unmaintained spaces.
- 	•	Any shared backyards, multi-family yards, or ambiguous property lines — use private, enclosed residential lots only.
+Generate a photorealistic, high-quality image suitable for a residential front or backyard in the Southeast Valley of Arizona, including areas like Gilbert, Chandler, Queen Creek, and Mesa.
 
-🏞 Composition Suggestions:
-	•	Raised beds, if included, must be made from composite, stone, or concrete block (no visible wood).
-	•	Vary the view — front yards, backyards, gravel walkways, side yards, desert patio setups, or cactus garden beds.
-	•	Keep the layout tidy, suburban, and appropriate to Arizonas desert aesthetic.
+The scene must reflect:
+	•	A dry desert climate with realistic sunlight and shadows.
+	•	Desert-adapted landscaping typical of suburban homes in the region.
+	•	Authentic materials and yard features commonly seen in Arizona neighborhoods.
+
+✅ Composition Guidelines:
+	•	All materials must appear appropriate to the desert: gravel, decomposed granite, pavers, stone, concrete, or composite.
+	•	No wood should be visible in raised beds, fences, benches, pergolas, or furniture. Use composite, stone, or concrete alternatives only.
+	•	The space must resemble a private, enclosed residential yard — not a shared, communal, or multi-family setting.
+	•	Lighting should reflect clear, bright Arizona skies — avoid any hint of overcast or shadowy skies.
+	•	The landscaping should be tidy, functional, and suburban-scale — not rural or estate-like.
+	•	If raised beds are included, they must be made from non-wood materials and neatly integrated into the yard.
+	•	The scene should feel natural and untouched, with no text, graphics, labels, overlays, or measurements present in the image.
+
+✅ Optional scene elements (variety encouraged across prompts):
+	•	Front yards, backyards, gravel walkways, desert patios, xeriscape gardens, or potted succulents.
+	•	Native and desert-adapted plants like agave, palo verde, desert marigold, Texas sage, ocotillo, or succulents.
+	•	Visible smart irrigation components (like drip tubing or timers) may be subtly present on soil if relevant.
 """.strip()
 
     if "REVISED CLAUDE IMAGE PROMPT INSTRUCTIONS" not in prompt:
@@ -102,8 +111,12 @@ def main():
         SELECT uuid, image_prompt, image_filename
         FROM articles
         WHERE LOWER(status) = 'image needed'
-          AND TRIM(image_prompt) != ''
-          AND TRIM(image_filename) != ''
+        AND TRIM(image_prompt) != ''
+        AND TRIM(image_filename) != ''
+        AND uuid NOT IN (
+            SELECT uuid FROM articles
+            WHERE LOWER(status) IN ('ready to upload', 'uploaded')
+        )
         ORDER BY publish_date ASC
         LIMIT ?
     """, (args.limit,))
@@ -120,20 +133,21 @@ def main():
             sanitized_prompt = sanitize_image_prompt(prompt)
             image_url = generate_image(sanitized_prompt)
             img_data = requests.get(image_url).content
-            filename = ensure_unique_filename(image_filename)
-            save_path = os.path.join(IMAGE_FOLDER, filename)
+            original_filename = image_filename.strip() # This is the filename embedded in <img src="...">
+            unique_filename = ensure_unique_filename(original_filename)
+            save_path = os.path.join(IMAGE_FOLDER, unique_filename)
 
             with open(save_path, "wb") as f:
                 f.write(img_data)
 
             cursor.execute("""
                 UPDATE articles
-                SET image_filename = ?, status = 'Ready to Upload'
+                SET image_filename = ?, image_original_filename = ?, status = 'Ready to Upload'
                 WHERE uuid = ?
-            """, (filename, uuid))
+            """, (unique_filename, original_filename, uuid))
             conn.commit()
 
-            print(f"✅ Image saved: {filename}")
+            print(f"✅ Image saved: {unique_filename}")
 
         except Exception as e:
             print(f"❌ Failed for UUID {uuid}: {str(e)}")
